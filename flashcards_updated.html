@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><base href="https://skribl.netlify.app/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Skribl</title>
+<meta name="theme-color" content="#0d0f1c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>:root{
+  --bg:#f5f6fb;
+  --surface:#ffffff;
+  --surface-2:#f0f1f9;
+  --ink:#161a2e;
+  --ink-soft:#5b6078;
+  --ink-faint:#9aa0b8;
+  --line:#e7e9f3;
+  --brand:#6d4aff;
+  --brand-2:#8b5cf6;
+  --brand-ink:#ffffff;
+  --grad:linear-gradient(135deg,#6d4aff 0%,#8b5cf6 55%,#b26bff 100%);
+  --success:#16a34a;
+  --success-soft:#e7f7ee;
+  --warn:#f59e0b;
+  --danger:#e11d48;
+  --danger-soft:#fdeef1;
+  --radius:18px;
+  --radius-sm:12px;
+  --shadow:0 10px 30px -12px rgba(64,44,150,.25);
+  --shadow-lg:0 24px 60px -20px rgba(64,44,150,.35);
+  --tabbar-h:74px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  background:var(--bg);color:var(--ink);
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  overscroll-behavior-y:none;
+}
+.app{max-width:480px;margin:0 auto;min-height:100dvh;position:relative}
+#view{padding:0 18px calc(var(--tabbar-h) + 24px)}
+.hidden{display:none!important}
+
+/* ---------- Buttons ---------- */
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  width:100%;padding:15px 18px;border:none;border-radius:14px;
+  font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;
+  transition:transform .12s,opacity .2s,box-shadow .2s;
+}
+.btn:active{transform:scale(.985)}
+.btn-primary{background:var(--grad);color:#fff;box-shadow:var(--shadow)}
+.btn-secondary{background:var(--surface-2);color:var(--ink)}
+.btn-ghost{background:transparent;color:var(--brand)}
+.btn-outline{background:transparent;color:var(--brand);border:1.5px solid var(--line)}
+.btn-danger{background:var(--danger-soft);color:var(--danger)}
+.btn-block{margin-top:10px}
+.btn-sm{padding:9px 14px;font-size:13px;border-radius:10px;width:auto}
+.btn[disabled]{opacity:.5;pointer-events:none}
+
+/* ---------- Cards & shells ---------- */
+.card{
+  background:var(--surface);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:18px;border:1px solid var(--line);
+}
+.section{background:var(--surface);border-radius:var(--radius);border:1px solid var(--line);padding:18px}
+h1,h2,h3{margin:0;line-height:1.15}
+h1{font-size:26px;font-weight:900;letter-spacing:-.02em}
+h2{font-size:20px;font-weight:800;letter-spacing:-.01em}
+h3{font-size:16px;font-weight:700}
+.muted{color:var(--ink-soft)}
+.faint{color:var(--ink-faint)}
+.small{font-size:13px}
+.tiny{font-size:11.5px}
+.row{display:flex;align-items:center}
+.row.between{justify-content:space-between}
+.gap4{gap:4px}.gap8{gap:8px}.gap12{gap:12px}
+.mt4{margin-top:4px}.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt20{margin-top:20px}.mt24{margin-top:24px}
+.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}.mb20{margin-bottom:20px}
+
+/* ---------- Hero / header ---------- */
+.screen-head{margin:14px 0 4px}
+.greeting{font-size:12.5px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.08em}
+
+/* ---------- Home buttons ---------- */
+.home-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.action-btn{
+  display:flex;flex-direction:column;gap:8px;align-items:flex-start;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;text-align:left;cursor:pointer;box-shadow:var(--shadow);
+  transition:transform .12s;color:inherit;font-family:inherit;
+}
+.action-btn:active{transform:scale(.97)}
+.action-btn .emoji{font-size:26px;width:48px;height:48px;border-radius:13px;display:grid;place-items:center;background:var(--surface-2)}
+.action-btn span{font-weight:700;font-size:15px}
+.action-btn.cta{
+  grid-column:1/-1;background:var(--grad);color:#fff;
+  flex-direction:row;align-items:center;justify-content:flex-start;
+}
+.action-btn.cta .emoji{background:rgba(255,255,255,.16)}
+
+/* ---------- Progress bar ---------- */
+.prog{height:11px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.prog>i{display:block;height:100%;border-radius:99px;background:var(--grad);transition:width .5s ease}
+
+/* ---------- Bottom nav ---------- */
+.tabbar{
+  position:fixed;left:50%;transform:translateX(-50%);bottom:0;
+  width:100%;max-width:480px;height:var(--tabbar-h);
+  background:rgba(255,255,255,.92);backdrop-filter:blur(14px);
+  border-top:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-around;
+  padding:6px 8px calc(6px + env(safe-area-inset-bottom));z-index:50;
+}
+.tab{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  background:none;border:none;font-family:inherit;cursor:pointer;
+  color:var(--ink-faint);font-size:10.5px;font-weight:700;
+  min-width:58px;padding:4px 2px;
+}
+.tab .t-ic{font-size:21px;line-height:1}
+.tab.active{color:var(--brand)}
+.tab.create{position:relative;top:-12px}
+.tab.create .t-ic{
+  width:54px;height:54px;border-radius:17px;background:var(--grad);color:#fff;
+  display:grid;place-items:center;font-size:25px;box-shadow:var(--shadow-lg);
+  border:3px solid var(--bg);
+}
+.tab.create.active{color:var(--brand)}
+
+/* ---------- Flashcards ---------- */
+.flash-stage{perspective:1200px;position:relative;min-height:340px}
+.flashcard{
+  position:absolute;inset:0;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.2,.7,.3,1);
+  cursor:pointer;
+}
+.flashcard.flipped{transform:rotateY(180deg)}
+.fc-face{
+  position:absolute;inset:0;backface-visibility:hidden;border-radius:20px;
+  background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);
+  display:flex;flex-direction:column;justify-content:center;padding:30px 24px;
+}
+.fc-face.back{transform:rotateY(180deg);background:var(--grad);color:#fff;border:none}
+.fc-face-label,.fc-back-label{position:absolute;top:16px;left:20px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.fc-face-label{color:var(--ink-faint)}
+.fc-back-label{color:rgba(255,255,255,.75)}
+.fc-text{font-size:21px;font-weight:800;line-height:1.4;word-break:break-word}
+.fc-image{width:100%;height:145px;object-fit:cover;border-radius:14px;margin:16px 0 14px;background:var(--surface-2)}
+.fc-image-credit{font-size:10px;color:var(--ink-faint);margin-top:-9px;margin-bottom:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fc-visual{font-size:64px;line-height:1;margin:18px 0 12px;filter:drop-shadow(0 8px 15px rgba(72,49,160,.18))}
+.fc-explain{margin-top:16px;font-size:13.5px;font-weight:500;color:rgba(255,255,255,.85);line-height:1.5}
+.card-actions{display:flex;gap:10px;margin-top:14px}
+.card-actions .btn{flex:1}
+
+/* ---------- Quiz ---------- */
+.q-option{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+  background:var(--surface);border:1.5px solid var(--line);border-radius:14px;
+  padding:15px 16px;margin:8px 0;font-family:inherit;font-size:15px;font-weight:600;color:var(--ink);
+  cursor:pointer;transition:.15s;
+}
+.q-option .letter{width:30px;height:30px;border-radius:9px;background:var(--surface-2);display:grid;place-items:center;font-weight:800;font-size:13px;color:var(--ink-soft);flex:none}
+.q-option.selected{border-color:var(--brand);background:#f3f0ff}
+.q-option.selected .letter{background:var(--brand);color:#fff}
+.q-option.correct{border-color:var(--success);background:var(--success-bg)}
+.q-option.correct .letter{background:var(--success);color:#fff}
+.q-option.wrong{border-color:var(--danger);background:var(--danger-soft)}
+.q-option.wrong .letter{background:var(--danger);color:#fff}
+.q-option.dim{opacity:.5}
+.explain-box{margin-top:12px;background:var(--surface-2);border-radius:12px;padding:14px;font-size:14px;line-height:1.5}
+.answer-mode{display:flex;gap:8px;margin-top:12px}
+.answer-mode .btn{flex:1}
+.flash-answer{margin-top:12px}
+.flash-answer .q-option{cursor:pointer}
+.flash-answer .q-option:disabled{cursor:default}
+.flash-answer-result{margin-top:10px;padding:12px 14px;border-radius:12px;font-size:13px;line-height:1.45}
+.flash-answer-result.correct{background:var(--success-soft);color:var(--success)}
+.flash-answer-result.wrong{background:var(--danger-soft);color:var(--danger)}
+.flash-answer-hint{font-size:12px;color:var(--ink-faint);margin-top:8px}
+.lesson-image{width:100%;max-height:230px;object-fit:cover;border-radius:14px;margin-top:12px;background:var(--surface-2)}
+.source-card{display:block;color:inherit;text-decoration:none;padding:14px;border:1px solid var(--line);border-radius:13px;background:var(--surface);transition:transform .15s,border-color .15s}
+.source-card:hover{transform:translateY(-2px);border-color:var(--brand)}
+.source-publisher{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--brand);font-weight:800}
+
+/* ---------- Score / result ---------- */
+.score-hero{text-align:center;padding:10px 0}
+.score-num{font-size:58px;font-weight:900;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ring{--p:0;width:150px;height:150px;border-radius:50%;background:conic-gradient(var(--brand) calc(var(--p)*1%),var(--surface-2) 0);display:grid;place-items:center;margin:0 auto}
+.ring>div{width:116px;height:116px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-size:34px;font-weight:900}
+
+/* ---------- Inputs ---------- */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:13px;font-weight:700;color:var(--ink-soft);margin-bottom:7px}
+.input,textarea.input,select.input{
+  width:100%;box-sizing:border-box;padding:14px 15px;border-radius:12px;
+  border:1.5px solid var(--line);background:var(--surface);font-family:inherit;font-size:15px;color:var(--ink);
+}
+.input:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(109,74,255,.15)}
+textarea.input{min-height:110px;resize:vertical}
+
+/* ---------- Chips ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  padding:9px 14px;border-radius:99px;border:1.5px solid var(--line);background:var(--surface);
+  font-size:13.5px;font-weight:600;color:var(--ink-soft);cursor:pointer;font-family:inherit;transition:.15s;
+}
+.chip.on{border-color:var(--brand);background:#f3f0ff;color:var(--brand)}
+
+/* ---------- Upload ---------- */
+.upload-zone{
+  border:2px dashed var(--line);border-radius:20px;background:var(--surface);
+  padding:34px 20px;text-align:center;cursor:pointer;transition:.2s;
+}
+.upload-zone:hover{border-color:var(--brand);background:#faf9ff}
+.upload-zone .big{font-size:42px}
+.upload-img{width:100%;max-height:280px;object-fit:cover;border-radius:14px;margin-top:8px}
+.preview-img{width:100%;max-height:240px;object-fit:cover;border-radius:14px;margin-top:12px}
+
+/* ---------- Loading / AI ---------- */
+.ai-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:55vh;text-align:center}
+.ai-orb{
+  width:84px;height:84px;border-radius:50%;background:var(--grad);
+  display:grid;place-items:center;font-size:40px;animation:orb 2.4s ease-in-out infinite;
+  box-shadow:var(--shadow-lg);
+}
+@keyframes orb{0%,100%{transform:scale(1) translateY(0)}50%{transform:scale(1.08) translateY(-6px)}}
+.ai-step{font-size:16px;font-weight:800;margin-top:26px}
+.ai-sub{color:var(--ink-soft);font-size:13.5px;margin-top:6px}
+.loader-dots{display:flex;gap:7px;margin-top:18px}
+.loader-dots i{width:9px;height:9px;border-radius:50%;background:var(--brand);animation:bounce 1.2s infinite}
+.loader-dots i:nth-child(2){animation-delay:.15s}.loader-dots i:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,100%{opacity:.25;transform:translateY(0)}50%{opacity:1;transform:translateY(-6px)}}
+
+/* ---------- Lists / stat rows ---------- */
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:12px 2px;border-bottom:1px solid var(--line);font-size:14.5px}
+.stat-row:last-child{border-bottom:none}
+.stat-val{font-weight:800}
+
+.list-item{
+  background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:14px 16px;margin-bottom:10px;cursor:pointer;
+}
+.list-item:active{transform:scale(.99)}
+
+/* ---------- Planner schedule ---------- */
+.day-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
+.day-title{font-weight:800;font-size:15px;display:flex;justify-content:space-between}
+.session-row{display:flex;justify-content:space-between;align-items:center;padding:9px 2px;border-bottom:1px dashed var(--line);font-size:14px}
+.session-row:last-child{border:none}
+
+/* ---------- Toast ---------- */
+.toast{
+  position:fixed;bottom:calc(var(--tabbar-h) + 18px);left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;font-weight:600;
+  box-shadow:var(--shadow-lg);z-index:200;transition:.3s;max-width:88%;text-align:center;opacity:0;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- Modal ---------- */
+.modal-mask{position:fixed;inset:0;background:rgba(10,12,26,.55);backdrop-filter:blur(4px);z-index:120;display:flex;align-items:flex-end;justify-content:center}
+.modal{width:100%;max-width:480px;background:var(--bg);border-radius:24px 24px 0 0;padding:24px 20px calc(20px + env(safe-area-inset-bottom));animation:up .28s cubic-bezier(.2,.8,.3,1)}
+@keyframes up{from{transform:translateY(100%)}to{transform:translateY(0)}}
+
+/* ---------- Onboarding / auth ---------- */
+.auth-card{display:flex;flex-direction:column;justify-content:center;min-height:88vh;padding-top:20px}
+.logo{width:64px;height:64px;border-radius:18px;background:var(--grad);display:grid;place-items:center;font-size:34px;box-shadow:var(--shadow-lg)}
+.social-btn{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--surface);border:1.5px solid var(--line);color:var(--ink);font-weight:700;border-radius:14px;padding:14px;font-size:15px;cursor:pointer;font-family:inherit;width:100%}
+.dot-list{display:flex;justify-content:center;gap:7px;margin:20px 0}
+.dot-list i{width:8px;height:8px;border-radius:50%;background:var(--line);transition:.3s}
+.dot-list i.on{background:var(--brand);width:22px;border-radius:99px}
+
+/* ---------- Achievements ---------- */
+.achv{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:13px 14px;margin-bottom:10px}
+.achv.locked{opacity:.5}
+.achv .em{font-size:26px;width:46px;height:46px;border-radius:12px;background:var(--surface-2);display:grid;place-items:center}
+.achv.locked .em{filter:grayscale(1)}
+.achv .bar{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-top:7px}
+.achv .bar i{display:block;height:100%;background:var(--grad)}
+
+/* ---------- Misc ---------- */
+.pill{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:99px;font-size:12px;font-weight:800}
+.pill.brand{background:var(--brand);color:#fff}
+.pill.soft{background:var(--surface-2);color:var(--ink-soft)}
+.pill.success{background:var(--success-bg);color:var(--success)}
+.pill.warn{background:#fdf3e0;color:var(--warn)}
+.divider{height:1px;background:var(--line);margin:16px 0}
+.toggle{width:50px;height:29px;border-radius:99px;background:var(--surface-2);border:none;position:relative;cursor:pointer;transition:.2s}
+.toggle.on{background:var(--brand)}
+.toggle:after{content:"";position:absolute;top:3px;left:3px;width:23px;height:23px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle.on:after{left:24px}
+table.sched{width:100%;border-collapse:collapse;font-size:14px}
+table.sched td,table.sched th{padding:9px 6px;text-align:left;border-bottom:1px solid var(--line)}
+table.sched th{font-size:12px;text-transform:uppercase;color:var(--ink-faint);letter-spacing:.05em}
+.editable:focus{outline:none}
+.empty{text-align:center;padding:44px 20px;color:var(--ink-faint)}
+.empty .em{font-size:44px;display:block;margin-bottom:10px}
+.icon-btn{background:none;border:none;font-size:20px;cursor:pointer;padding:6px;color:var(--ink-soft)}
+.fab-dots{position:fixed;bottom:calc(var(--tabbar-h) + 18px);right:max(18px,calc(50% - 240px + 18px));z-index:60}</style>
+</head>
+<body>
+<div id="app" class="app"><div id="view"></div><nav id="tabbar" class="tabbar hidden" aria-label="Primary"></nav></div>
+<div id="toast" class="toast hidden"></div>
+<div id="modalRoot"></div>
+<script>/* Skribl — Data Layer
+   --------------------------------------------------------------
+   IMPORTANT ARCHITECTURE NOTE:
+   In this MVP, `Store` is a client-side persistence layer built on
+   localStorage. In production this maps 1:1 onto a real backend
+   (Supabase / Firebase / your own API) via the `apiAdapter` stub at
+   the bottom. Every read/write goes through Store methods so swapping
+   localStorage for a server touches ONE file. All data is keyed to the
+   signed-in user, so a user can only ever see their own data.
+*/
+const Store = (() => {
+  const KEY = 'skribl_db_v1';
+
+  const defaults = () => ({
+    user: null,               // {name,email,authMethod,grade,subjects,exams,difficulties,dailyMin,plan,planExpiry}
+    xp: 0,
+    streak: { count: 0, last: null, lastStudy: null },
+    bestStreak: 0,
+    level: 1,
+    totalMinutes: 0,
+    totalSessions: 0,
+    daily: {},                // {date: {goal, minutes}}
+    flashcards: [],           // {id,docId,subject,topic,front,back,explain,fav,right,wrong,createdAt}
+    quizzes: [],              // {id,subject,topic,score,total,weak[],questions,createdAt}
+    practice: [],
+    notes: [],                // {id,subject,topic,title,html,createdAt}
+    docStats: { flashcardsReviewed: 0 },
+    topicStats: {},           // "subject|topic" -> {subject,topic,right,wrong}
+    revisionPlan: null,       // {exams:[], schedule:{day:[{subject,topic,min}]}}
+    achievements: [],
+    history: [],              // {ts,date,minutes,xp,subject,label}
+  });
+
+  let db = load();
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      const parsed = raw ? JSON.parse(raw) : {};
+      return { ...defaults(), ...parsed, daily: parsed.daily || {}, streak: parsed.streak || { count: 0, last: null }, topicStats: parsed.topicStats || {}, docStats: parsed.docStats || { flashcardsReviewed: 0 } };
+    } catch (e) { return defaults(); }
+  }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch (e) { console.warn('save', e); } }
+
+  const todayStr = () => new Date().toISOString().slice(0, 10);
+  function ensureToday() {
+    const t = todayStr();
+    if (!db.daily[t]) db.daily[t] = { goal: (db.user && db.user.dailyMin) || 45, minutes: 0 };
+    const keys = Object.keys(db.daily).sort();
+    while (keys.length > 60) delete db.daily[keys.shift()];
+  }
+  function todayGoal() { ensureToday(); return db.daily[todayStr()]; }
+
+  function isPro() { return !!db.user && db.user.plan === 'pro'; }
+  function usage() {
+    const used = db.history.filter(h => h.ts && h.ts >= startOfToday() && h.label === 'gen').length;
+    return used;
+  }
+  function startOfToday() { const d = new Date(); d.setHours(0,0,0,0); return d.getTime(); }
+
+  // gamification
+  function computeLevel(xp) {
+    let level = 1, need = 100, rem = xp;
+    while (rem >= need) { rem -= need; level++; need = 100 + 50 * (level - 1); }
+    return { level, into: rem, need };
+  }
+  function grantXP(amount) { db.xp += amount; const lv = computeLevel(db.xp); const leveled = lv.level > db.level; db.level = lv.level; save(); return leveled; }
+  function logHistory(obj) { db.history.push({ ts: Date.now(), ...obj }); while (db.history.length > 2000) db.history.shift(); save(); }
+  function addMinutes(min, subject) {
+    ensureToday(); const d = db.daily[todayStr()]; d.minutes += min; db.totalMinutes += min;
+    logHistory({ minutes: min, subject }); save();
+  }
+  function recordSession() {
+    db.totalSessions++;
+    const t = todayStr();
+    if (db.streak.last !== t) {
+      const y = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
+      db.streak.count = (db.streak.last === y) ? db.streak.count + 1 : 1;
+      db.streak.lastStudy = t;
+      if (db.streak.count > db.bestStreak) db.bestStreak = db.streak.count;
+    }
+    db.streak.last = t;
+    save();
+  }
+  function touchStreak() { recordSession(); }
+
+  // topic stats
+  function recordAnswer(subject, topic, correct) {
+    const key = ((subject||'') + '|' + (topic||'')).toLowerCase();
+    const s = db.topicStats[key] || { subject, topic, right: 0, wrong: 0 };
+    correct ? s.right++ : s.wrong++;
+    db.topicStats[key] = s; save();
+  }
+  function topicList() {
+    const map = {};
+    Object.values(db.topicStats).forEach(s => {
+      const m = map[s.subject] = map[s.subject] || { right: 0, wrong: 0 };
+      m.right += s.right; m.wrong += s.wrong;
+    });
+    return map;
+  }
+
+  // achievements
+  const ACHIEVEMENTS = [
+    { id: 'first_quiz', em: '🏆', name: 'First Quiz', desc: 'Complete your first quiz' },
+    { id: 'first_session', em: '✍️', name: 'First Session', desc: 'Complete a study session' },
+    { id: 'streak7', em: '🔥', name: '7 Day Streak', desc: 'Study 7 days in a row' },
+    { id: 'flash100', em: '🧠', name: '100 Flashcards', desc: 'Review 100 flashcards' },
+    { id: 'sess10', em: '📚', name: '10 Study Sessions', desc: 'Complete 10 study sessions' },
+    { id: 'perfect', em: '💯', name: 'Perfect Score', desc: 'Score 100% on a quiz' },
+    { id: 're5', em: '🚀', name: 'Rising Star', desc: 'Reach level 5' },
+  ];
+  function checkAchievements() {
+    const unlocked = new Set(db.achievements); let any = false;
+    const c = (id, cond) => { if (!unlocked.has(id) && cond()) { unlocked.add(id); any = true; } };
+    c('first_quiz', () => db.quizzes.length >= 1);
+    c('first_session', () => db.totalSessions >= 1);
+    c('streak7', () => db.streak.count >= 7);
+    c('flash100', () => (db.docStats.flashcardsReviewed || 0) >= 100);
+    c('sess10', () => db.totalSessions >= 10);
+    c('perfect', () => db.quizzes.some(q => q.score > 0 && q.score === q.total));
+    c('re5', () => db.level >= 5);
+    if (any) { db.achievements = [...unlocked]; save(); }
+    return any;
+  }
+  function achProgress(id) {
+    switch (id) {
+      case 'first_quiz': return { cur: Math.min(db.quizzes.length, 1), max: 1 };
+      case 'first_session': return { cur: Math.min(db.totalSessions, 1), max: 1 };
+      case 'streak7': return { cur: Math.min(db.streak.count, 7), max: 7 };
+      case 'flash100': return { cur: Math.min(db.docStats.flashcardsReviewed || 0, 100), max: 100 };
+      case 'sess10': return { cur: Math.min(db.totalSessions, 10), max: 10 };
+      case 'perfect': return { cur: db.quizzes.some(q => q.score > 0 && q.score === q.total) ? 1 : 0, max: 1 };
+      case 're5': return { cur: Math.min(db.level, 5), max: 5 };
+    }
+  }
+
+  // limits
+  const FREE_DAILY_GEN = 3;
+
+  const api = { setConfig: c => window.__SS_CONFIG__ = c, getConfig: () => window.__SS_CONFIG__ || {} };
+
+  ensureToday(); save();
+
+  return {
+    db, save, todayStr, todayGoal, ensureToday, isPro, usage,
+    computeLevel, grantXP, logHistory, addMinutes, recordSession, touchStreak,
+    recordAnswer, topicList, checkAchievements, achProgress, ACHIEVEMENTS,
+    FREE_DAILY_GEN, api,
+  };
+})();
+/* Skribl — Content Generation Engine
+   --------------------------------------------------------------
+   Turns uploaded material into study content (flashcards, quizzes,
+   notes, practice, tutor lessons).
+
+   ARCHITECTURE: `SSAI.generate(doc)` is the single entry point. The
+   built-in engine is a curated knowledge base + keyword extractor so
+   the MVP works fully offline. To plug in a real AI model, replace the
+   body of `SSAI.generate` with an API call — the rest of the app is
+   unchanged. API keys are read ONLY from Store.api.getConfig().apiKey
+   (env-injected), never from the UI.
+*/
+const SSAI = (() => {
+
+  const SUBJECT_LABEL = { maths:'Maths', science:'Science', english:'English', history:'History', geography:'Geography', physics:'Physics', general:'General' };
+
+  // ---------------- Knowledge base ----------------
+  const KB = {
+    maths: {
+      algebra: {
+        cards: [
+          { f:'Solve for x: 2x + 6 = 14', b:'x = 4', e:'Subtract 6 from both sides (2x = 8), then divide by 2.' },
+          { f:'What does "expand" mean in algebra?', b:'Multiplying out the brackets', e:'3(x+2) = 3x + 6 — multiply each term inside by the outside term.' },
+          { f:'Simplify: 4a + 3b - 2a + b', b:'2a + 4b', e:'Collect like terms: (4a-2a) + (3b+b) = 2a + 4b.' },
+          { f:'What is a coefficient?', b:'The number in front of a variable', e:'In 5x the coefficient is 5 — how many x\'s you have.' },
+          { f:'Solve x² = 81', b:'x = 9 or x = -9', e:'Both 9 and -9 square to 81, so give both.' },
+        ],
+        quiz: [
+          { q:'Solve 3x = 12. What is x?', o:['4','9','6','3'], a:0, exp:'Divide both sides by 3: x = 12 ÷ 3 = 4.' },
+          { q:'Which is an algebraic expression?', o:['5 + 3','2x + 1','9','7 = 7'], a:1, exp:'An expression uses variables and operations.' },
+          { q:'True or false: 2a + 3a = 6a', o:['False','True'], a:0, exp:'2a + 3a = 5a, not 6a.' },
+          { q:'Expand 2(x + 5)', o:['2x + 5','2x + 10','x + 10','2x'], a:1, exp:'Multiply both terms by 2: 2x + 10.' },
+          { q:'If y = 4, what is 3y + 2?', o:['14','12','10','16'], a:0, exp:'3(4) + 2 = 14.' },
+        ],
+        notes: [
+          { h:'What is Algebra?', pts:['Algebra uses letters (variables) for unknown numbers.','In x + 5 = 12, x is the unknown.','Key terms: coefficient, variable, constant.'] },
+          { h:'Solving Equations', pts:['Do the same to both sides to keep it balanced.','Subtract/add first, then multiply/divide.','Check by substituting your answer back in.'] },
+        ]
+      },
+      geometry: {
+        cards: [
+          { f:'Area of a triangle', b:'½ × base × height', e:'A triangle is half a rectangle.' },
+          { f:'Angles in a triangle sum to…', b:'180°', e:'Any triangle\'s three angles add to 180 degrees.' },
+          { f:'What is π (pi)?', b:'Ratio of circumference to diameter ≈ 3.14', e:'Circumference ÷ diameter always equals pi.' },
+          { f:'Circumference of a circle', b:'2πr or πd', e:'Twice the radius times pi, or diameter times pi.' },
+        ],
+        quiz: [
+          { q:'Area of a 6cm × 4cm rectangle?', o:['10cm²','24cm²','20cm²','48cm²'], a:1, exp:'Area = length × width = 24cm².' },
+          { q:'Two angles are 60° and 50°. Third?', o:['70°','80°','90°','60°'], a:0, exp:'180 - 60 - 50 = 70°.' },
+          { q:'True or false: all sides of a square are equal.', o:['True','False'], a:0, exp:'A square has four equal sides.' },
+        ],
+        notes: [
+          { h:'Area', pts:['Rectangle: length × width.','Triangle: ½ × base × height.','Circle: πr².'] },
+        ]
+      }
+    },
+    science: {
+      cells: {
+        cards: [
+          { f:'What is the nucleus?', b:'The control centre of the cell', e:'It holds DNA and controls the cell\'s activities.' },
+          { f:'What does the cell membrane do?', b:'Controls what enters and leaves the cell', e:'It\'s the partially-permeable boundary.' },
+          { f:'What is a chloroplast?', b:'Where photosynthesis happens', e:'Found in plant cells; contains chlorophyll that absorbs light.' },
+          { f:'Difference between plant and animal cells?', b:'Plants have a cell wall, chloroplasts and a large vacuole', e:'Animal cells lack these three.' },
+        ],
+        quiz: [
+          { q:'Which organelle carries out photosynthesis?', o:['Mitochondria','Chloroplast','Nucleus','Ribosome'], a:1, exp:'Chloroplasts convert light energy into food.' },
+          { q:'Where is genetic information stored?', o:['Cytoplasm','Nucleus','Cell wall','Vacuole'], a:1, exp:'The nucleus holds the DNA.' },
+          { q:'True or false: animal cells have a rigid cell wall.', o:['False','True'], a:0, exp:'Only plant cells have a cell wall.' },
+        ],
+        notes: [
+          { h:'Cell Structure', pts:['Nucleus: control centre, holds DNA.','Membrane: controls what enters/leaves.','Plant cells: wall, chloroplast, vacuole.'] },
+        ]
+      },
+      'chemical reactions': {
+        cards: [
+          { f:'What is a chemical reaction?', b:'Substances change into new substances', e:'Atoms rearrange and new products form.' },
+          { f:'What is an exothermic reaction?', b:'One that releases heat energy', e:'E.g. burning — surroundings get hotter.' },
+          { f:'What is a reactant?', b:'The starting substance', e:'Reactants sit on the left of the arrow.' },
+        ],
+        quiz: [
+          { q:'Burning wood releases heat. This is…', o:['Endothermic','Exothermic','Neutral','Reversible'], a:1, exp:'Combustion releases heat → exothermic.' },
+          { q:'In a balanced equation, what is conserved?', o:['Mass','Energy only','Volume','Atoms counted'], a:0, exp:'Atoms are rearranged, never destroyed, so mass is conserved.' },
+        ],
+        notes: [
+          { h:'Reactions', pts:['Chemical reactions form new substances.','Exothermic releases heat; endothermic absorbs it.','Mass is conserved in balanced equations.'] },
+        ]
+      }
+    },
+    english: {
+      macbeth: {
+        cards: [
+          { f:'Who wrote Macbeth?', b:'William Shakespeare', e:'A tragedy written around 1606.' },
+          { f:'Theme of ambition?', b:'Unchecked ambition leads to Macbeth\'s downfall', e:'His desire for power drives him to murder.' },
+          { f:'Who is Lady Macbeth?', b:'Macbeth\'s wife who urges him to kill Duncan', e:'Ruthless early on, later undone by guilt.' },
+          { f:'What do the witches predict?', b:'Macbeth will become Thane of Cawdor and King', e:'Their prophecy sparks his ambition.' },
+        ],
+        quiz: [
+          { q:'What genre is Macbeth?', o:['Comedy','Tragedy','Romance','History'], a:1, exp:'A tragedy — the hero falls due to ambition.' },
+          { q:'Who first suggests killing Duncan?', o:['Macbeth','Lady Macbeth','Banquo','The witches'], a:1, exp:'Lady Macbeth drives the plot forward.' },
+        ],
+        notes: [
+          { h:'Macbeth', pts:['Tragedy about ambition and guilt.','Lady Macbeth is the initial driving force.','The witches\' prophecy sparks the plot.'] },
+        ]
+      },
+      poetry: {
+        cards: [
+          { f:'What is imagery?', b:'Language that creates pictures in the mind', e:'Uses metaphor, simile and description.' },
+          { f:'What is a simile?', b:'Comparing using "like" or "as"', e:'Example: "as brave as a lion".' },
+        ],
+        quiz: [
+          { q:'"Her smile was like the sun" is a…', o:['Metaphor','Simile','Personification','Alliteration'], a:1, exp:'It uses "like", so it\'s a simile.' },
+        ],
+        notes: [
+          { h:'Poetry Devices', pts:['Imagery creates mental pictures.','Simile uses like/as; metaphor states something is another.'] },
+        ]
+      }
+    },
+    history: {
+      'ww2': {
+        cards: [
+          { f:'When did WWII start?', b:'1939', e:'Britain/France declared war after Germany invaded Poland.' },
+          { f:'What was the Blitz?', b:'Sustained German bombing of British cities', e:'London was heavily bombed in 1940-41.' },
+          { f:'When did WWII end?', b:'1945', e:'Germany surrendered in May (VE Day), Japan in September.' },
+        ],
+        quiz: [
+          { q:'Which country did Germany invade to start the war?', o:['France','Poland','Russia','Belgium'], a:1, exp:'The invasion of Poland in Sept 1939 triggered war.' },
+        ],
+        notes: [
+          { h:'WWII Timeline', pts:['Started 1939 with the invasion of Poland.','The Blitz bombed British cities 1940-41.','Ended 1945 in Europe and Japan.'] },
+        ]
+      }
+    },
+    geography: {
+      rivers: {
+        cards: [
+          { f:'What is the source of a river?', b:'Where the river starts', e:'Usually in high ground, hills or mountains.' },
+          { f:'What is a river\'s mouth?', b:'Where the river meets the sea', e:'The endpoint of the river.' },
+          { f:'What is erosion?', b:'The wearing away of rock by water', e:'Rivers erode their banks and bed over time.' },
+        ],
+        quiz: [
+          { q:'Where does a river begin?', o:['Mouth','Source','Delta','Estuary'], a:1, exp:'The source is the start of the river.' },
+        ],
+        notes: [
+          { h:'River Features', pts:['Source = start; mouth = where it meets the sea.','Erosion wears away the river banks and bed.'] },
+        ]
+      }
+    },
+    physics: {
+      forces: {
+        cards: [
+          { f:'What is a force measured in?', b:'Newtons (N)', e:'Measured with a newton / force meter.' },
+          { f:'What is gravity?', b:'A force pulling objects together', e:'On Earth it accelerates objects at ~9.8 m/s².' },
+          { f:'What is friction?', b:'A force that opposes motion', e:'It slows objects and produces heat.' },
+        ],
+        quiz: [
+          { q:'What unit is force measured in?', o:['Joules','Newtons','Watts','Pascals'], a:1, exp:'Force is measured in newtons (N).' },
+        ],
+        notes: [
+          { h:'Forces', pts:['Force is measured in newtons.','Gravity pulls objects together.','Friction opposes motion.'] },
+        ]
+      }
+    }
+  };
+
+  // ---------------- Detection ----------------
+  const SUBJ_HINTS = {
+    maths: ['algebra','geometry','equation','quadratic','factoris','fraction','solve','maths','mathematic','angle','bracket','expand'],
+    science: ['cell','biology','chemistry','photosynth','atom','reaction','organism','chemical','nucleus','chloroplast'],
+    english: ['macbeth','shakespeare','poem','poetry','metaphor','simile','essay','novel','english','imagery'],
+    history: ['war','ww2','empire','rome','revolut','history','battle','blitz','poland','hitler'],
+    geography: ['river','coast','volcano','climate','geograph','mountain','earthquake','erosion'],
+    physics: ['force','energy','gravity','motion','physics','electric','wave','heat','friction','newton'],
+  };
+  const TOPIC_HINTS = {
+    algebra: ['algebra','equation','solve','factoris','expand','quadratic','bracket'],
+    geometry: ['geometry','angle','area','circle','triangle','shape'],
+    cells: ['cell','nucleus','chloroplast','mitochondria','membrane'],
+    'chemical reactions': ['reaction','chemical','atom','reactant','endothermic','exothermic'],
+    macbeth: ['macbeth','shakespeare','lady macbeth','banquo','duncan','witch'],
+    poetry: ['poem','poetry','metaphor','simile','verse','stanza'],
+    'ww2': ['ww2','war','hitler','germany','poland','blitz','1945','1939'],
+    rivers: ['river','erosion','source','mouth','tributary','flood'],
+    forces: ['force','gravity','friction','newton','motion','mass'],
+  };
+  const TOPIC_SUBJ = { algebra:'maths', geometry:'maths', cells:'science', 'chemical reactions':'science', macbeth:'english', poetry:'english', 'ww2':'history', rivers:'geography', forces:'physics' };
+
+  const norm = s => (s || '').toLowerCase();
+  function detect(text) {
+    const t = norm(text);
+    let topic = null, topicScore = 0;
+    Object.keys(TOPIC_HINTS).forEach(tp => {
+      const sc = TOPIC_HINTS[tp].filter(k => t.includes(k)).length;
+      if (sc > topicScore) { topicScore = sc; topic = tp; }
+    });
+    let subject = topic ? TOPIC_SUBJ[topic] : null;
+    if (!subject) {
+      let best = 0;
+      Object.keys(SUBJ_HINTS).forEach(s => {
+        const sc = SUBJ_HINTS[s].filter(k => t.includes(k)).length;
+        if (sc > best) { best = sc; subject = s; }
+      });
+    }
+    return { subject: subject || 'general', topic: topic || 'Core concepts' };
+  }
+
+  // ---------------- Generic text extraction ----------------
+  function splitSentences(t) { return t.split(/(?<=[.!?])\s+/).map(s => s.trim()).filter(s => s.length > 8); }
+  function extractCard(s) {
+    if (s.length > 100) return { f: 'Explain: ' + s.slice(0, 60) + '…', b: s, e: 'Key point from your material.' };
+    if (/[?!]/.test(s)) return { f: s, b: 'This is a key point from your material.', e: 'Review this in your notes.' };
+    return { f: 'What is "…" or ' + s.slice(0, 30) + '?', b: s, e: 'Key definition from your material.' };
+  }
+  function genericContent(text, subject, topic) {
+    const sentences = splitSentences(text);
+    const cards = [];
+    const seen = new Set();
+    sentences.forEach(s => {
+      const k = norm(s).slice(0, 40);
+      if (seen.has(k)) return; seen.add(k);
+      cards.push(extractCard(s));
+    });
+    if (!cards.length) {
+      cards.push({ f: `What is ${topic}?`, b: `This topic covers the key ideas you uploaded.`, e: 'Try uploading clearer text or a photo.' });
+    }
+    const quiz = cards.slice(0, 3).map((c, i) => ({
+      q: c.f, o: [c.b, 'An unrelated fact', 'The opposite is true', 'This is not important'], a: 0, exp: c.e || c.b
+    }));
+    return { cards, quiz, notes: buildNotes(topic, cards) };
+  }
+
+  // ---------------- Notes / practice ----------------
+  function canExtract(text, subject, topic) { return genericContent(text, subject, topic); }
+  function buildNotes(topic, cards) {
+    return [{ h: topic, pts: cards.map(c => c.b).slice(0, 5) }];
+  }
+  function genNotes(subject, topic, cards) {
+    const kb = KB[subject] && KB[subject][topic];
+    if (kb && kb.notes) return kb.notes;
+    return buildNotes(topic, cards);
+  }
+  function genPractice(subject, topic, quiz) {
+    // All tiers are now checkable MCQs so medium/hard aren't static prompts.
+    const q = i => (quiz && quiz[i]) || (quiz && quiz[0]) || { q:'Explain the main idea in your own words.', o:['A','B','C','D'], a:0, exp:'Review the notes.' };
+    const mk = (diff, i) => { const x=q(i); return { diff, q:x.q, o:x.o||['A','B','C','D'], a:(x.a!=null?x.a:0), exp:x.exp||'' }; };
+    return [ mk('easy',0), mk('medium',1), mk('hard',2) ];
+  }
+  function defaultTopic(subject) {
+    const t=KB[subject]; const keys=t?Object.keys(t):[]; return keys.length? keys[0] : null;
+  }
+  function buildExplain(topic, cards) {
+    return {
+      intro: `Let's look at ${topic}. I'll explain it simply, then check you've understood.`,
+      explain: cards[0] ? cards[0].b : `This topic covers the key ideas you uploaded.`,
+      example: 'Here\'s an example: think of it as a puzzle where each piece connects to the next.',
+      check: cards[0] ? `Can you explain "${cards[0].f}" in your own words?` : 'Can you summarise the main idea in one sentence?',
+    };
+  }
+  function genExplain(subject, topic, cards) {
+    const kb = KB[subject] && KB[subject][topic];
+    return buildExplain(topic, kb ? kb.cards : cards);
+  }
+
+  // ---------------- Public generator ----------------
+  function generate(input) {
+    const text = input.text || '';
+    const det = detect(text);
+    const subject = input.subject || det.subject;
+    const topic = input.topic || det.topic;
+    const kb = (KB[subject] && KB[subject][topic]) || null;
+    const fallback = canExtract(text, subject, topic);
+    const cards = kb ? kb.cards : fallback.cards;
+    const quiz = kb ? kb.quiz : fallback.quiz;
+    return {
+      subject, topic,
+      subjectLabel: SUBJECT_LABEL[subject],
+      cards, quiz,
+      notes: kb ? (kb.notes || buildNotes(topic, cards)) : genNotes(subject, topic, cards),
+      practice: genPractice(subject, topic, quiz),
+      explain: genExplain(subject, topic, cards),
+    };
+  }
+
+  // ---------------- Tutor lesson (Teach Me) ----------------
+  function genTutor(doc) {
+    const gen = generate(doc);
+    const cards = gen.cards.slice(0, 3);
+    return {
+      subject: gen.subjectLabel, topic: gen.topic,
+      intro: `Hi! Let's explore ${gen.topic} together. I'll teach you step by step — no spoilers, I promise.`,
+      steps: cards.map(c => ({
+        concept: c.f,
+        explain: c.e || c.b,
+        example: 'Example: ' + c.b,
+        question: `Now you try: ${c.f}`,
+        model: c.b,
+      })),
+      next: 'Great work! Now let\'s check what you remember with a short quiz.',
+    };
+  }
+
+  return { generate, detect, SUBJECT_LABEL, genTutor, defaultTopic };
+})();
+/* Skribl — Application Shell
+   --------------------------------------------------------------
+   Router + all views. Mobile-first SPA. Each screen is rendered by a
+   render/start function below and served through the tab nav.
+*/
+
+/* ------------------------- helpers ------------------------- */
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function uid(){ return 'id'+Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function norm(s){ return String(s==null?'':s).toLowerCase(); }
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2600); }
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function minText(m){ return m>=60?Math.floor(m/60)+'h'+(m%60?m%60+'m':''):m+'m'; }
+function modal(html){ $('modalRoot').innerHTML=`<div class="modal-mask" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()">${html}</div></div>`; }
+function closeModal(){ $('modalRoot').innerHTML=''; }
+
+const state = { doc:null, gen:null, cards:null, cardIdx:0, cardMode:'choice', cardAnswered:false, quiz:null, quizIdx:0, quizCorrect:0, quizLog:null, tutor:null, tutorStep:0, practice:null, practiceIdx:0, pending:null };
+
+/* ------------------------- tabs / nav ------------------------- */
+const TABS = [ {id:'home',label:'Home',ic:'🏠'}, {id:'study',label:'Study',ic:'🧠'}, {id:'create',label:'Create',ic:'📸',create:true}, {id:'progress',label:'Progress',ic:'📈'}, {id:'profile',label:'Profile',ic:'👤'} ];
+function renderTabs(active){
+  const tb=$('tabbar'); tb.classList.remove('hidden');
+  tb.innerHTML = TABS.map(t=>`<button class="tab ${t.create?'create':''} ${active===t.id?'active':''}" onclick="AppTab('${t.id}')"><span class="t-ic">${t.ic}</span><span>${t.label}</span></button>`).join('');
+}
+function hideTabs(){ $('tabbar').classList.add('hidden'); }
+function AppTab(id){
+  if(id==='create'){ viewCreatePicker(); return; }
+  if(!Store.db.user){ viewAuth('login'); return; }
+  ({home:viewHome, study:viewStudy, progress:viewProgress, profile:viewProfile}[id]||viewHome)();
+}
+
+/* ------------------------- auth ------------------------- */
+function viewAuth(mode){
+  hideTabs();
+  $('view').innerHTML=`
+  <div class="auth-card">
+    <div class="logo">📸</div>
+    <h1 style="margin-top:14px">Skribl</h1>
+    <p class="muted" style="margin:8px 0 0">Take a photo of what you're learning.<br>Get personalised revision in seconds.</p>
+    <div class="field mt24"><label>Email</label><input class="input" id="a_email" type="email" placeholder="you@school.com"></div>
+    <div class="field"><label>Password</label><input class="input" id="a_pass" type="password" placeholder="••••••••"></div>
+    ${mode==='signup'?'<div class="field"><label>Your name</label><input class="input" id="a_name" type="text" placeholder="Alex"></div>':''}
+    <button class="btn btn-primary mt8" onclick="submitAuth('${mode}')">${mode==='signup'?'Create my account':'Log in'}</button>
+    <div class="row" style="gap:12px;margin:18px 0"><div class="divider" style="flex:1;margin:0"></div><span class="faint small">or</span><div class="divider" style="flex:1;margin:0"></div></div>
+    <button class="social-btn" onclick="socialAuth('google')"><span style="font-size:17px;font-weight:900;color:var(--brand)">G</span> Continue with Google</button>
+    <button class="social-btn mt8" onclick="socialAuth('apple')"><span style="font-size:17px">🍎</span> Continue with Apple</button>
+    <p class="small muted" style="text-align:center;margin-top:22px">${mode==='signup'?'Already have an account? <a href="#" onclick="viewAuth(\'login\');return false" style="color:var(--brand);font-weight:700">Log in</a>':'New here? <a href="#" onclick="viewAuth(\'signup\');return false" style="color:var(--brand);font-weight:700">Create an account</a>'}</p>
+  </div>`;
+}
+function login(){ viewAuth('login'); }
+function submitAuth(mode){
+  const email=$('a_email').value.trim(), pass=$('a_pass').value.trim();
+  if(!email||!pass){ toast('Enter your email and password.'); return; }
+  const users=JSON.parse(localStorage.getItem('ss_users')||'{}');
+  if(mode==='login'){
+    const rec=users[email.toLowerCase()];
+    if(!rec){ toast('No account found — create one first.'); return; }
+    if(rec.pass!==pass){ toast('Incorrect password.'); return; }
+    Store.db.user={ ...rec }; Store.save(); finishAuth();
+  } else {
+    const name=$('a_name').value.trim()||email.split('@')[0];
+    if(users[email.toLowerCase()]){ toast('An account already exists for this email.'); return; }
+    const rec={ id:uid(), name, email, authMethod:'email', pass, plan:'free', createdAt:Date.now() };
+    users[email.toLowerCase()]=rec; localStorage.setItem('ss_users',JSON.stringify(users));
+    Store.db.user=rec; Store.save(); Store.grantXP(30); onboarding();
+  }
+}
+function socialAuth(method){
+  const fake={google:'g'+Math.floor(Math.random()*9999), apple:'a'+Math.floor(Math.random()*9999)}[method];
+  if(!Store.db.user){ Store.db.user={ id:uid(), name:'Student', email:fake+'@social.com', auth:method, plan:'free', createdAt:Date.now() }; Store.save(); Store.grantXP(30); onboarding(); }
+  else { Store.db.user.auth=method; Store.save(); toast('Connected with '+(method==='google'?'Google':'Apple')); AppTab('profile'); }
+}
+function finishAuth(){ Store.ensureToday(); Store.checkAchievements(); AppTab('home'); toast('Welcome back, '+esc(Store.db.user.name.split(' ')[0])+'! 👋'); }
+
+/* ------------------------- onboarding ------------------------- */
+const SUBJECTS=['Maths','Science','English','History','Geography','Physics','Chemistry','Biology','Computer Science','Art','French','Spanish'];
+const EXAMS=['GCSE','A-Level','SAT','IB','Mocks','University','No exams yet'];
+const OBS={ grade:null, subjects:[], exams:[], difficulties:[], dailyMin:45 };
+const OBS_STEPS=[
+  {id:'grade', single:true, title:'What year are you in?', opts:['Year 7','Year 8','Year 9','Year 10','Year 11','Year 12/13','College','University']},
+  {id:'subjects', single:false, title:'What subjects do you study?', opts:SUBJECTS},
+  {id:'exams', single:false, title:'What are you preparing for?', opts:EXAMS},
+  {id:'difficulties', single:false, title:'What do you find hardest?', opts:['Memorising facts','Maths problems','Writing essays','Exam timing','Staying focused','Science concepts','Reading fast']},
+  {id:'daily', single:true, title:'How much can you study each day?', opts:['15 min','30 min','45 min','1 hour','1.5 hours','2+ hours']},
+];
+let obStep=0;
+function onboarding(){ hideTabs(); obStep=0; renderOB(); }
+function renderOB(){
+  const s=OBS_STEPS[obStep]; const cur=OBS[s.id]||[];
+  $('view').innerHTML=`
+  <div class="auth-card">
+    <div class="dot-list">${OBS_STEPS.map((_,i)=>`<i class="${i===obStep?'on':''}"></i>`).join('')}</div>
+    <h1>${esc(s.title)}</h1>
+    <p class="muted small" style="margin:6px 0 18px">${s.single?'Pick one':'Pick all that apply'}</p>
+    <div class="chips" id="obChips"></div>
+    <button class="btn btn-primary btn-block mt20" onclick="nextOB()">${obStep===OBS_STEPS.length-1?'Create my plan ✨':'Continue'}</button>
+  </div>`;
+  $('obChips').innerHTML=s.opts.map(o=>`<button class="chip ${cur.includes(o)?'on':''}" onclick="pickOB(this,'${esc(o)}')">${esc(o)}</button>`).join('');
+}
+function pickOB(btn,val){
+  const s=OBS_STEPS[obStep];
+  if(s.single){ OBS[s.id]=val; document.querySelectorAll('#obChips .chip').forEach(c=>c.classList.remove('on')); btn.classList.add('on'); }
+  else { OBS[s.id]=OBS[s.id]||[]; if(OBS[s.id].includes(val)){ OBS[s.id]=OBS[s.id].filter(x=>x!==val); btn.classList.remove('on'); } else { OBS[s.id].push(val); btn.classList.add('on'); } }
+}
+function nextOB(){
+  const s=OBS_STEPS[obStep]; const v=OBS[s.id];
+  if(!v || (Array.isArray(v)&&!v.length)){ toast(s.single?'Pick one option':'Pick at least one'); return; }
+  if(obStep<OBS_STEPS.length-1){ obStep++; renderOB(); return; }
+  finishOnboarding();
+}
+function finishOnboarding(){
+  const m={'15 min':15,'30 min':30,'45 min':45,'1 hour':60,'1.5 hours':90,'2+ hours':120}[OBS.daily]||45;
+  const u=Store.db.user;
+  u.grade=OBS.grade; u.subjects=OBS.subjects||[]; u.exams=OBS.exams||[]; u.difficulties=OBS.difficulties||[]; u.dailyMin=m; u.onboarded=true;
+  Store.db.daily[Store.todayStr()]={goal:m, minutes:0};
+  Store.grantXP(40); Store.save();
+  toast('Your plan is ready! 🎉'); AppTab('home');
+}
+
+/* ------------------------- home ------------------------- */
+function lastActivity(){
+  const fc=Store.db.flashcards; if(!fc.length) return null;
+  const last=fc[fc.length-1]; return { subject:last.subject, topic:last.topic, id:last.topic+last.subject };
+}
+function viewHome(){
+  const u=Store.db.user; const g=Store.todayGoal(); const pct=Math.min(100,Math.round(g.minutes/g.goal*100));
+  const h=new Date().getHours(); const greet=h<12?'Good morning':h<18?'Good afternoon':'Good evening';
+  const lv=Store.computeLevel(Store.db.xp); const recent=lastActivity(); const dueN=dueCards().length;
+  renderTabs('home');
+  $('view').innerHTML=`
+  <div class="screen-head">
+    <div class="greeting">${greet}! 👋</div>
+    <h1>${esc(u.name.split(' ')[0])}</h1>
+    <div class="row gap8 mt8"><span class="pill brand">🔥 ${Store.db.streak.count} day streak</span><span class="pill soft">Lv ${lv.level} · ${lv.into}/${lv.need} XP</span></div>
+  </div>
+  <p class="muted mt20" style="font-weight:700;font-size:15px">What are you studying today?</p>
+  <div class="home-actions mt12">
+    <button class="action-btn cta" onclick="viewCreatePicker()"><span class="emoji">📸</span><span>Scan material</span></button>
+    <button class="action-btn" onclick="startFlashReview()"><span class="emoji" style="background:#eef4ff">🧠</span><span>Flashcards</span></button>
+    <button class="action-btn" onclick="startQuiz()"><span class="emoji" style="background:#f3f0ff">❓</span><span>Take a quiz</span></button>
+    <button class="action-btn" onclick="startTeach()"><span class="emoji" style="background:#eefaf1">👨‍🏫</span><span>Teach Me</span></button>
+    <button class="action-btn" onclick="viewPlanner()"><span class="emoji" style="background:#fdf3e0">📚</span><span>Revision plan</span></button>
+  </div>
+  <div class="section mt20">
+    <div class="row between"><span style="font-weight:800">Today's Goal</span><span class="faint small">${g.minutes} / ${g.goal} min</span></div>
+    <div class="prog mt8"><i style="width:${pct}%"></i></div>
+    <p class="small muted mt8">${pct>=100?'Goal smashed! 🎉':'Keep going — you\'re '+pct+'% there.'}</p>
+  </div>
+  ${dueN>0?`
+  <div class="section mt12">
+    <div class="row between"><span style="font-weight:700">🔁 Due for review</span><span class="pill brand">${dueN}</span></div>
+    <button class="btn btn-secondary btn-sm mt12" onclick="reviewDue()">Review due cards</button>
+  </div>`:''}
+  ${recent?`
+  <div class="section mt12">
+    <div style="font-weight:700">Continue studying</div>
+    <div class="list-item mt12" onclick="openRecent('${esc(recent.topic)}','${esc(recent.subject)}')">
+      <div class="row between"><div><div style="font-weight:700">${esc(recent.topic)}</div><div class="small muted">${esc(recent.subject)} · flashcards</div></div><span style="color:var(--brand);font-weight:800">→</span></div>
+    </div>
+  </div>`:''}`;
+}
+function openRecent(topic,subject){ const gen=SSAI.generate({subject,topic}); state.gen=gen; startCardReview(gen.cards,gen); }
+
+/* ------------------------- create / upload ------------------------- */
+function viewCreatePicker(){
+  renderTabs('create');
+  $('view').innerHTML=`
+  <div class="screen-head"><div class="greeting">New material</div><h1>What are you studying?</h1><p class="muted mt8">Upload a photo, PDF or paste notes. AI turns it into study tools.</p></div>
+  <input type="file" id="fileInput" accept="image/*,.pdf" class="hidden" onchange="handleFile(this)">
+  <div class="upload-zone mt20" onclick="$('fileInput').click()"><div style="font-size:52px">📸</div><div style="font-weight:800;font-size:16px;margin-top:8px">Take a photo or upload</div><div class="small muted">Homework, textbook page, notes or a PDF</div></div>
+  <div class="section mt16" style="cursor:pointer" onclick="viewTextNotes()"><div class="row gap8"><span style="font-size:22px">⌨️</span><div><div style="font-weight:700">Type or paste notes</div><div class="small muted">Great for long text and fast results</div></div></div></div>
+  <div class="section mt16" style="cursor:pointer" onclick="viewQuickStart()"><div class="row gap8"><span style="font-size:22px">⚡</span><div><div style="font-weight:700">Quick start</div><div class="small muted">Pick a subject and topic instantly</div></div></div></div>`;
+}
+function viewTextNotes(){
+  renderTabs('create');
+  $('view').innerHTML=`
+  <div class="screen-head"><div class="greeting">Type your notes</div><h1>Your material</h1></div>
+  <textarea class="input" id="notesText" placeholder="Paste or type the notes, homework, or revision text here…" style="min-height:200px"></textarea>
+  <div class="field mt12"><label>Subject (optional)</label><select class="input" id="subjSel"><option value="">Auto-detect</option><option>Maths</option><option>Science</option><option>English</option><option>History</option><option>Geography</option><option>Physics</option><option>Other</option></select></div>
+  <button class="btn btn-primary mt16" onclick="submitText()">Understand material ✨</button>`;
+}
+function submitText(){
+  const text=$('notesText').value.trim();
+  if(text.length<4){ toast('Add a little more text first.'); return; }
+  const s=$('subjSel').value; beginAI({ text, subject:s? s.toLowerCase():null });
+}
+function viewQuickStart(){
+  renderTabs('create');
+  $('view').innerHTML=`
+  <div class="screen-head"><div class="greeting">Quick start</div><h1>Pick a topic</h1><p class="muted mt8">Generate from our built-in study library.</p></div>
+  <div class="row gap8 mt12" style="flex-wrap:wrap">${['Maths','Science','English','History','Geography','Physics'].map(s=>`<button class="chip" onclick="quickSubject('${s}')">${s}</button>`).join('')}</div>
+  <div id="quickTopics" class="mt16"></div>`;
+}
+const QT={'Maths':['Algebra','Geometry'],'Science':['Cells','Chemical reactions'],'English':['Macbeth','Poetry'],'History':['WWII'],'Geography':['Rivers'],'Physics':['Forces']};
+const QSUBJ={'Maths':'maths','Science':'science','English':'english','History':'history','Geography':'geography','Physics':'physics'};
+function quickSubject(s){ $('quickTopics').innerHTML=(QT[s]||[]).map(t=>`<button class="chip mt8" onclick="quickTopic('${QSUBJ[s]}','${esc(t)}')">${esc(t)}</button>`).join(''); }
+function quickTopic(subj,topic){ beginAI({ subject:subj, topic }); }
+function handleFile(input){
+  const f=input.files[0]; if(!f) return;
+  if(f.type.startsWith('image/')){
+    const r=new FileReader(); r.onload=e=>{ state.pending={type:'img', name:f.name, dataUrl:e.target.result}; showImgConfirm(); }; r.readAsDataURL(f);
+  } else {
+    // PDF: we cannot extract its text without OCR/PDF lib, so don't readAsText (it would garble binary).
+    state.pending={type:'pdf', name:f.name, text:''}; showPdfConfirm();
+  }
+}
+function showImgConfirm(){
+  renderTabs('create');
+  $('view').innerHTML=`
+  <div class="screen-head"><div class="greeting">Your photo</div><h1>Looks good!</h1><p class="small muted">${esc(state.pending.name)} · I'll read it and find the key concepts.</p></div>
+  <img class="upload-img" src="${state.pending.dataUrl}">
+  <div class="field mt16"><label>Subject (to help me understand)</label><select class="input" id="imgSubj"><option value="">Auto-detect</option><option>Maths</option><option>Science</option><option>English</option><option>History</option><option>Geography</option><option>Physics</option><option>Other</option></select></div>
+  <button class="btn btn-primary mt8" onclick="confirmImg()">Understand this ✨</button>`;
+}
+function confirmImg(){ const s=$('imgSubj').value; beginAI({ text:'', image:state.pending.dataUrl, subject:s? s.toLowerCase():null, name:state.pending.name }); }
+function showPdfConfirm(){
+  renderTabs('create');
+  $('view').innerHTML=`
+  <div class="screen-head"><div class="greeting">Your PDF</div><h1>Got it!</h1></div>
+  <div class="section mt16"><div class="row gap8"><span style="font-size:20px">⚠️</span><p class="small muted" style="margin:0">This build can't read the text out of a PDF automatically. Pick the subject and I'll generate study material from it. (Hook up an AI/OCR engine in <b>js/ai.js</b> for full PDF text reading.)</p></div></div>
+  <div class="field mt16"><label>Subject</label><select class="input" id="pdfSubj"><option value="">Choose a subject…</option><option>Maths</option><option>Science</option><option>English</option><option>History</option><option>Geography</option><option>Physics</option><option>Other</option></select></div>
+  <button class="btn btn-primary mt8" onclick="confirmPdf()">Understand this ✨</button>`;
+}
+function confirmPdf(){ const s=$('pdfSubj').value; if(!s){ toast('Pick a subject so I can generate your study material.'); return; } beginAI({ text:'', name:state.pending.name, subject:s.toLowerCase() }); }
+
+/* ------------------------- AI processing ------------------------- */
+const AI_STEPS=['Reading your material…','Researching trusted sources…','Finding helpful visuals…','Building your lesson…'];
+async function beginAI(doc){
+  doc=doc||{};
+  if((!doc.text || !String(doc.text).trim()) && !doc.image){
+    doc.text='';
+    if(doc.subject && !doc.topic){ const t=SSAI.defaultTopic(doc.subject); if(t) doc.topic=t; }
+  }
+  hideTabs();
+  let i=0;
+  const subjLabel=doc.subject? (SSAI.SUBJECT_LABEL[doc.subject]||doc.subject) : (doc.text? 'Auto-detecting subject…' : 'Pick a subject to get started');
+  $('view').innerHTML=`<div class="ai-loading"><div class="ai-dot">🧠</div><div class="ai-step" id="aiStep">${AI_STEPS[0]}</div><div class="loader-dots"><span></span><span></span><span></span></div><div class="small faint mt12" id="aiSubj">${subjLabel}</div></div>`;
+  const iv=setInterval(()=>{ i=Math.min(i+1,AI_STEPS.length-1); if($('aiStep')) $('aiStep').textContent=AI_STEPS[i]; },1100);
+  try{
+    const res=await fetch('/api/generate-lesson',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(doc)});
+    const data=await res.json();
+    if(!res.ok) throw new Error(data.error||'Lesson generation failed');
+    const gen=normaliseGenerated(data);
+    state.gen=gen; persistGenerated(gen); showFeaturePicker(gen);
+  }catch(err){
+    const gen=normaliseGenerated(SSAI.generate(doc));
+    state.gen=gen; persistGenerated(gen); showFeaturePicker(gen);
+    toast((err&&err.message?err.message:'Research is temporarily unavailable')+' Using the built-in lesson instead.');
+  }finally{ clearInterval(iv); }
+}
+function normaliseGenerated(gen){
+  gen=gen||{}; gen.cards=(Array.isArray(gen.cards)?gen.cards:[]).map(c=>({...c,front:c.front||c.f,back:c.back||c.b,explain:c.explain||c.e})); gen.quiz=Array.isArray(gen.quiz)?gen.quiz:[];
+  gen.notes=Array.isArray(gen.notes)?gen.notes:[]; gen.practice=Array.isArray(gen.practice)?gen.practice:[]; gen.resources=Array.isArray(gen.resources)?gen.resources:[];
+  gen.subjectLabel=gen.subjectLabel||SSAI.SUBJECT_LABEL[gen.subject]||gen.subject||'General'; gen.topic=gen.topic||'Core concepts';
+  gen.quiz=gen.quiz.map(randomiseQuestion); gen.practice=gen.practice.map(randomiseQuestion);
+  if(!gen.practice.length) gen.practice=(gen.quiz.slice(0,3)).map((q,i)=>({...q,diff:['easy','medium','hard'][i]||'medium'}));
+  if(!gen.tutor) gen.tutor=SSAI.genTutor({subject:gen.subject,topic:gen.topic,text:''});
+  gen.tutor.subject=gen.subjectLabel; gen.tutor.topic=gen.topic; gen.tutor.resources=gen.resources;
+  return gen;
+}
+function randomiseQuestion(q){
+  const opts=(q.o||[]).map((text,index)=>({text,correct:index===Number(q.a)}));
+  shuffle(opts); return {...q,o:opts.map(x=>x.text),a:Math.max(0,opts.findIndex(x=>x.correct))};
+}
+function persistGenerated(gen){
+  Store.db.flashcards=Store.db.flashcards.concat(gen.cards.map(c=>({id:uid(),subject:gen.subjectLabel,topic:gen.topic,front:c.f,back:c.b,explain:c.e,image:c.image,imagePage:c.imagePage,imageAlt:c.imageAlt,imageCredit:c.imageCredit,visual:c.visual,fav:false,interval:0,ease:2.5,nextDue:Date.now(),createdAt:Date.now()})));
+  Store.db.notes.push({id:uid(), subject:gen.subjectLabel, topic:gen.topic, html:renderNotes(gen.notes), createdAt:Date.now()});
+  Store.grantXP(20); Store.logHistory({label:'doc',subject:gen.subjectLabel,topic:gen.topic}); Store.save();
+}
+function showFeaturePicker(gen){
+  renderTabs('create');
+  $('view').innerHTML=`
+  <div class="screen-head"><div class="greeting">Ready!</div><h1>What should we make?</h1></div>
+  <div class="section" style="background:var(--grad);color:#fff;border:none">
+    <div class="row gap8"><span class="pill" style="background:rgba(255,255,255,.25)">${esc(gen.subjectLabel)}</span><span class="pill" style="background:rgba(255,255,255,.25)">${esc(gen.topic)}</span></div>
+    <p class="mt8" style="font-weight:600;opacity:.95">I found <b>${gen.cards.length} key concepts</b>, checked the topic online, and added learning resources.</p>
+  </div>
+  <div class="mt16" style="display:grid;gap:10px">
+    ${featureItem('🧠','Flashcards',gen.cards.length+' smart cards','genCards()')}
+    ${featureItem('❓','Quiz','Multiple choice + explanations','genQuiz()')}
+    ${featureItem('📝','Revision notes','Clear, organised summary','genNotes()')}
+    ${featureItem('✏️','Practice questions','Exam-style · pick difficulty','genPractice()')}
+    ${featureItem('👨‍🏫','Teach Me','AI tutor explains step by step','genTeach()')}
+    ${gen.resources.length?featureItem('🔎','Trusted resources',gen.resources.length+' useful places to learn more','viewResources(state.gen)'):''}
+    ${featureItem('🗂️','Full revision pack','Everything at once','genPack()')}
+  </div>
+  ${!Store.isPro()?`<p class="tiny faint" style="text-align:center;margin-top:14px">Free plan: <b>${Math.max(0,Store.FREE_DAILY_GEN-Store.usage())} generations left today</b> · <a href="#" onclick="viewPricing();return false" style="color:var(--brand)">Upgrade for unlimited</a></p>`:''}`;
+}
+function featureItem(em,label,sub,fn){ return `<div class="list-item" onclick="${fn}"><div class="row gap12"><span style="font-size:26px">${em}</span><div style="flex:1"><div style="font-weight:800">${label}</div><div class="small muted">${sub}</div></div><span style="color:var(--brand);font-weight:800">→</span></div></div>`; }
+function useGen(){
+  if(Store.isPro()) return true;
+  if(Store.usage()>=Store.FREE_DAILY_GEN){ showUpgrade(); return false; }
+  Store.logHistory({label:'gen'}); return true;
+}
+function genCards(){ if(useGen()) startCardReview(state.gen.cards,state.gen); }
+function genQuiz(){ if(useGen()) startQuizFromGen(state.gen); }
+function genNotes(){ if(useGen()){ const n=Store.db.notes[Store.db.notes.length-1]; viewNotes(n); } }
+function genPractice(){ if(useGen()) startPractice(state.gen); }
+function genTeach(){ if(useGen()) startTeachFromGen(state.gen); }
+function genPack(){ if(useGen()) viewPack(state.gen); }
+
+/* ------------------------- flashcards ------------------------- */
+function startCardReview(cards,gen){ state.cards=cards.map(c=>({...c})); state.cardIdx=0; state.cardMode='choice'; state.cardAnswered=false; state.gen=gen; renderCard(); }
+function startQuickReview(){ if(!Store.db.flashcards.length){ toast('Create some material first.'); viewCreatePicker(); return; } startCardReview(shuffle(Store.db.flashcards.map(c=>({...c}))), {}); }
+function renderCard(){
+  hideTabs();
+  const cards=state.cards; const i=state.cardIdx; const card=cards[i]; const topic=state.gen?state.gen.topic:'';
+  const choices=cardChoices(card);
+  const answerUi=state.cardMode==='choice'
+    ? `<div class="flash-answer" id="flashAnswer">${choices.map((o,idx)=>`<button class="q-option" onclick="checkCardChoice(${idx})"><span class="letter">${'ABCD'[idx]}</span><span>${esc(o)}</span></button>`).join('')}</div>`
+    : `<div class="flash-answer" id="flashAnswer"><textarea class="input" id="cardTypedAnswer" rows="3" placeholder="Type your answer…" ${state.cardAnswered?'disabled':''}></textarea><button class="btn btn-primary mt8" onclick="checkTypedCard()" ${state.cardAnswered?'disabled':''}>Check answer</button><div class="flash-answer-hint">Try to include the key idea, not necessarily the exact wording.</div></div>`;
+  $('view').innerHTML=`
+  <div class="screen-head"><div class="greeting">Flashcards</div><div class="row between"><h2>${esc(topic)}</h2><span class="faint small">${i+1} / ${cards.length}</span></div><div class="prog mt8"><i style="width:${(i+1)/cards.length*100}%"></i></div></div>
+  <div class="flash-stage mt20"><div class="flashcard ${card.rev?'flipped':''}" onclick="flipCard(this)">
+    <div class="fc-face"><span class="fc-face-label">Question</span>${cardVisual(card)}<div class="fc-text">${esc(card.front)}</div></div>
+    <div class="fc-face back"><span class="fc-back-label">Answer</span><div class="fc-text">${esc(card.back)}</div>${card.explain?`<div class="fc-explain">💡 ${esc(card.explain)}</div>`:''}</div>
+  </div></div>
+  <div class="answer-mode"><button class="btn btn-sm ${state.cardMode==='choice'?'btn-primary':'btn-secondary'}" onclick="setCardMode('choice')">Multiple choice</button><button class="btn btn-sm ${state.cardMode==='typed'?'btn-primary':'btn-secondary'}" onclick="setCardMode('typed')">Type answer</button></div>
+  ${answerUi}
+  <div class="card-actions mt16"><button class="btn btn-secondary" onclick="cardVote(false)" ${state.cardAnswered?'':'disabled'}>😵 Hard</button><button class="btn btn-primary" onclick="cardVote(true)" ${state.cardAnswered?'':'disabled'}>😊 Easy</button><button class="btn btn-ghost" onclick="toggleFav()">${card.fav?'⭐':'☆'}</button></div>
+  <div class="row gap8 mt12" style="justify-content:center"><button class="btn btn-sm btn-secondary" onclick="shuffleCards()">🔀 Shuffle</button><button class="btn btn-sm btn-secondary" onclick="editCard()">✏️ Edit</button><button class="btn btn-sm btn-danger" onclick="deleteCard()">🗑️</button></div>`;
+}
+function cardChoices(card){
+  if(card._choices&&card._choices.length)return card._choices;
+  const values=[card.back,...state.cards.filter((x,idx)=>idx!==state.cardIdx&&x.back).map(x=>x.back)];
+  card._choices=shuffle([...new Set(values)]).slice(0,4);
+  return card._choices;
+}
+function setCardMode(mode){ if(state.cardMode===mode)return; state.cardMode=mode; state.cardAnswered=false; renderCard(); }
+function cardAnswerResult(correct){
+  state.cardAnswered=true;
+  const card=state.cards[state.cardIdx]; card.rev=true;
+  renderCard();
+  const box=$('flashAnswer'); if(!box)return;
+  const result=document.createElement('div'); result.className=`flash-answer-result ${correct?'correct':'wrong'}`; result.innerHTML=`<b>${correct?'✓ Correct':'✗ Not quite'}</b><div class="mt4">Answer: ${esc(card.back)}</div>`; box.appendChild(result);
+}
+function checkCardChoice(index){
+  if(state.cardAnswered)return;
+  const card=state.cards[state.cardIdx]; const choices=cardChoices(card); cardAnswerResult(choices[index]===card.back);
+}
+function checkTypedCard(){
+  if(state.cardAnswered)return;
+  const input=$('cardTypedAnswer'); if(!input||!input.value.trim()){ toast('Type an answer first.'); return; }
+  const answer=input.value.trim().toLowerCase(); const target=String(state.cards[state.cardIdx].back||'').toLowerCase();
+  const words=target.split(/\\W+/).filter(w=>w.length>3); const hits=words.filter(w=>answer.includes(w)).length;
+  cardAnswerResult(answer===target || (words.length>0&&hits>=Math.ceil(words.length*.5)));
+}
+function cardVisual(card){
+  if(card.image){ const credit=card.imageCredit?`<div class="fc-image-credit">Image: ${esc(card.imageCredit)}</div>`:''; return `<img class="fc-image" src="${esc(card.image)}" alt="${esc(card.imageAlt||card.front)}" loading="eager" onerror="this.style.display='none'">${credit}`; }
+  const visual=String(card.visual||'🧠'); return `<div class="fc-visual" aria-hidden="true">${esc(visual.length<=4?visual:'🧠')}</div>`;
+}
+function flipCard(elm){ elm.classList.toggle('flipped'); }
+function cardVote(easy){
+  if(!state.cardAnswered){ toast('Answer the card first.'); return; }
+  const c=state.cards[state.cardIdx]; c.rev=true;
+  // Spaced repetition: Easy pushes the next review out, Hard pulls it back in today.
+  const now=Date.now();
+  if(easy){ c.ease=Math.min(2.6,(c.ease||2.5)+0.15); c.interval=(c.interval||0)? Math.round(c.interval*1.8):1; }
+  else { c.ease=Math.max(1.3,(c.ease||2.5)-0.15); c.interval=Math.max(0,Math.round((c.interval||1)*0.5)); }
+  c.nextDue = now + (c.interval? c.interval*864e5 : 20*60e3);
+  const st=Store.db.flashcards.find(x=>x.id===c.id); if(st){ st.interval=c.interval; st.ease=c.ease; st.nextDue=c.nextDue; st.fav=c.fav; }
+  Store.db.docStats.flashcardsReviewed=(Store.db.docStats.flashcardsReviewed||0)+1;
+  Store.recordAnswer(c.subject||'General', c.topic||'Concepts', easy);
+  Store.grantXP(easy?15:5); Store.recordSession(); Store.addMinutes(1, c.subject||'General');
+  Store.checkAchievements(); Store.save();
+  state.cardIdx++; state.cardAnswered=false; if(state.cardIdx>=state.cards.length){ cardDone(); return; } renderCard();
+}
+function dueCards(){ const now=Date.now(); return Store.db.flashcards.filter(c=>!c.nextDue || c.nextDue<=now); }
+function reviewDue(){ const d=dueCards(); if(!d.length){ toast('Nothing due right now — nice work!'); return; } startCardReview(shuffle(d.map(c=>({...c}))), {}); }
+function cardDone(){ hideTabs(); const n=state.cards.length; const num=Store.db.docStats.flashcardsReviewed||0; $('view').innerHTML=`
+  <div class="empty" style="padding-top:24vh"><span class="em">🎉</span><h3 style="margin:0">Deck complete!</h3><p class="muted mt8">You reviewed ${n} cards (${num} total this week).</p>
+  <div class="row gap12 mt16" style="max-width:300px;margin:0 auto"><button class="btn btn-primary" style="flex:1" onclick="viewHome()">Done</button><button class="btn btn-secondary" onclick="shuffleCards()">Again</button></div></div>`; }
+function toggleFav(){ const c=state.cards[state.cardIdx]; c.fav=!c.fav; Store.save(); toast(c.fav?'Favourited ⭐':'Removed'); renderCard(); }
+function shuffleCards(){ state.cards=shuffle(state.cards); state.cardIdx=0; renderCard(); }
+function deleteCard(){ state.cards.splice(state.cardIdx,1); if(state.cardIdx>=state.cards.length)state.cardIdx=Math.max(0,state.cards.length-1); Store.save(); toast('Deleted'); if(!state.cards.length){ cardDone(); return; } renderCard(); }
+function editCard(){ const c=state.cards[state.cardIdx]; modal(`<h3>Edit card</h3><div class="field mt12"><label>Question</label><input class="input" id="ceF" value="${esc(c.front)}"></div><div class="field"><label>Answer</label><input class="input" id="ceB" value="${esc(c.back)}"></div><div class="row gap8 mt12"><button class="btn btn-primary" style="flex:1" onclick="saveEdit()">Save</button><button class="btn btn-secondary" onclick="closeModal()">Cancel</button></div>`); }
+function saveEdit(){ const c=state.cards[state.cardIdx]; c.front=$('ceF').value; c.back=$('ceB').value; Store.save(); closeModal(); toast('Saved'); renderCard(); }
+
+/* ------------------------- quiz ------------------------- */
+function startQuiz(){ if(!Store.db.flashcards.length){ toast('Create material first'); viewCreatePicker(); return; } const l=Store.db.flashcards[Store.db.flashcards.length-1]; const gen=SSAI.generate({subject:l.subject,topic:l.topic}); startQuizFromGen(gen); }
+function startQuizFromGen(gen){
+  gen=(gen&&gen.quiz)?gen:state.gen;
+  if(!gen||!Array.isArray(gen.quiz)||!gen.quiz.length){ toast('Create a researched lesson first.'); viewCreatePicker(); return; }
+  state.quiz={ subject:gen.subjectLabel||gen.subject||'General', topic:gen.topic, questions:gen.quiz.map(randomiseQuestion) }; state.quizIdx=0; state.quizCorrect=0; state.quizLog=[]; Store.recordSession(); renderQuiz();
+}
+function renderQuiz(){
+  hideTabs();
+  const q=state.quiz.questions[state.quizIdx]; const n=state.quiz.questions.length;
+  if(!q){ quizResult(); return; }
+  $('view').innerHTML=`
+  <div class="screen-head"><div class="greeting">Quiz · ${esc(state.quiz.subject)}</div><div class="row between"><h2>${esc(state.quiz.topic)}</h2><span class="faint small">${state.quizIdx+1} / ${n}</span></div><div class="prog mt8"><i style="width:${state.quizIdx/n*100}%"></i></div></div>
+  <h3 class="mt20" style="line-height:1.4">${esc(q.q)}</h3>
+  <div class="mt12" id="qOpts">${(q.o||[]).map((o,i)=>`<button class="q-option" onclick="pickAns(${i})"><span class="letter">${'ABCD'[i]}</span><span>${esc(o)}</span></button>`).join('')}</div>
+  <button class="btn btn-primary mt16 hidden" id="qNext" onclick="quizNext()">${state.quizIdx===n-1?'See results':'Next'}</button>`;
+}
+function pickAns(i){
+  const box=$('qOpts'); if(box.dataset.locked)return; box.dataset.locked='1';
+  const q=state.quiz.questions[state.quizIdx]; const correct=i===q.a;
+  [...box.querySelectorAll('.q-option')].forEach((o,idx)=>{ if(idx===q.a)o.classList.add('correct'); if(idx===i&&!correct)o.classList.add('wrong'); if(idx!==i&&idx!==q.a)o.classList.add('dim'); });
+  state.quizLog.push({topic:state.quiz.topic, subject:state.quiz.subject, correct});
+  if(correct)state.quizCorrect++;
+  Store.recordAnswer(state.quiz.subject, state.quiz.topic, correct);
+  const ex=document.createElement('div'); ex.className='explain-box'; ex.innerHTML=`<b style="color:${correct?'var(--success)':'var(--danger)'}">${correct?'✓ Correct':'✗ Not quite'}</b><div class="mt8">${esc(q.exp||q.o[q.a])}</div>`; box.appendChild(ex);
+  $('qNext').classList.remove('hidden');
+}
+function quizNext(){ state.quizIdx++; renderQuiz(); }
+function quizResult(){
+  const n=state.quiz.questions.length; const pct=Math.round(state.quizCorrect/n*100);
+  Store.db.quizzes.push({id:uid(), subject:state.quiz.subject, topic:state.quiz.topic, score:state.quizCorrect, total:n, createdAt:Date.now()});
+  Store.grantXP(state.quizCorrect*10); Store.addMinutes(10, state.quiz.subject); Store.recordSession();
+  Store.checkAchievements(); Store.save();
+  hideTabs();
+  const weak=weakAreas();
+  $('view').innerHTML=`
+  <div style="text-align:center" class="screen">
+    <div class="screen-head"><div class="greeting">Quiz complete</div></div>
+    <div class="ring" style="--p:${pct}"><div>${state.quizCorrect}/${n}</div></div>
+    <div class="score-num">${pct}%</div>
+    <p class="muted">${pct>=90?'Outstanding! 🎉':pct>=70?'Great effort, keep it up!':pct>=50?'Good start — let\'s revise the weak spots.':'No worries — the tutor can help.'}</p>
+    <div class="section mt20" style="text-align:left"><div class="row between"><b>XP earned</b><b style="color:var(--brand)">+${state.quizCorrect*10} XP</b></div><div class="row between mt8"><b>Topic</b><span class="pill ${pct>=70?'success':'warn'}">${pct>=70?'Strong':'Needs work'}</span></div></div>
+    ${weak.length?`<div class="section mt12" style="text-align:left"><div style="font-weight:700">Revise next:</div>${weak.map(w=>`<div class="small muted mt8">📌 ${esc(w)}</div>`).join('')}</div>`:''}
+    <div class="row gap12 mt20"><button class="btn btn-primary" style="flex:1" onclick="viewHome()">Done</button><button class="btn btn-secondary" style="flex:1" onclick="startTeachFromGen({subject:state.quiz.subject,topic:state.quiz.topic})">Tutor me</button></div>
+  </div>`;
+}
+function weakAreas(){
+  const a={}; Object.values(Store.db.topicStats).forEach(s=>{ const k=s.subject+'|'+s.topic; a[k]=a[k]||{right:0,wrong:0}; a[k].right+=s.right; a[k].wrong+=s.wrong; });
+  return Object.entries(a).filter(([k,v])=>v.wrong>=v.right).slice(0,3).map(([k])=>k.split('|')[1]||k.split('|')[0]);
+}
+
+/* ------------------------- teach me ------------------------- */
+function startTeachMe(){ if(!Store.db.flashcards.length){ toast('Create material first'); viewCreatePicker(); return; } const l=Store.db.flashcards[Store.db.flashcards.length-1]; startTeachFromGen({subject:l.subject,topic:l.topic}); }
+function startTeachFromGen(gen){
+  const rich=(gen&&gen.tutor)?gen:((state.gen&&state.gen.tutor&&(!gen||!gen.topic||state.gen.topic===gen.topic))?state.gen:null);
+  state.tutor=rich?{...rich.tutor,subject:rich.subjectLabel||rich.subject,topic:rich.topic,resources:rich.resources||[]} : SSAI.genTutor({subject:gen&&gen.subject,topic:gen&&gen.topic});
+  state.tutorStep=0; Store.recordSession(); renderTutor();
+}
+function renderTutor(){
+  hideTabs();
+  const t=state.tutor; const s=t.steps[state.tutorStep]; if(!s){ tutorDone(); return; }
+  $('view').innerHTML=`
+  <div class="screen-head"><div class="greeting">Teach Me · ${esc(t.subject)}</div><div class="row between"><h2>${esc(t.topic)}</h2><span class="faint small">Step ${state.tutorStep+1}/${t.steps.length}</span></div><div class="prog mt8"><i style="width:${state.tutorStep/t.steps.length*100}%"></i></div></div>
+  <div class="section mt16"><div class="row gap8"><span style="font-size:20px">💡</span><b>Learn this</b></div>${s.image?`<img class="lesson-image" src="${esc(s.image)}" alt="${esc(s.imageAlt||s.concept)}" loading="lazy">`:''}<p class="mt8" style="line-height:1.55"><b>${esc(s.concept)}</b> — ${esc(s.explain)}</p><div class="explain-box mt8">${esc(s.example)}</div></div>
+  <div class="section mt12"><div style="font-weight:700">🤔 Your turn</div><p class="small muted mt8">${esc(s.question)}</p><textarea class="input mt12" id="tutorAns" placeholder="Type your answer…"></textarea><button class="btn btn-primary mt12" onclick="checkTutor()">Check my answer</button></div>`;
+}
+function checkTutor(){
+  const ans=$('tutorAns').value.trim(); if(!ans){ toast('Write a quick answer first.'); return; }
+  const s=state.tutor.steps[state.tutorStep];
+  const res=scoreAnswer(ans, s.model);
+  const good=res.score>=0.5;
+  const fb= res.missing.length? ' Good attempt, but <b>'+esc(res.missing.join('</b>, <b>'))+'</b> were missing.' : '';
+  $('view').innerHTML=`<div class="screen"><div class="section" style="text-align:center"><div style="font-size:40px">${good?'🎉':'💡'}</div><h3>${good?'Good attempt!':'Nice try!'}</h3><p class="muted mt8">${good?'You hit the key ideas ('+res.hit+'/'+res.total+').':fb}</p><div class="explain-box mt12" style="background:var(--grad);color:#fff;border:none"><b>Model answer:</b><br>${esc(s.model)}</div><div class="row gap12 mt20"><button class="btn btn-primary" style="flex:1" onclick="tutorNext()">${state.tutorStep===state.tutor.steps.length-1?'Finish':'Next →'}</button></div></div></div>`;
+  Store.grantXP(good?25:10); Store.recordAnswer(state.tutor.subject, state.tutor.topic, good); Store.addMinutes(5, state.tutor.subject);
+}
+// Content-aware check: how many key terms of the model answer does the student hit?
+function scoreAnswer(attempt, model){
+  const stop=new Set('the a an and of to for with is are that this it in on by as you your how what when can does not no be do so but at from or'.split(' '));
+  const tk=s=>s.toLowerCase().replace(/[^a-z0-9' ]/g,' ').split(/\s+/).filter(w=>w.length>=4&&!stop.has(w));
+  const key=new Set(tk(model)); const hit=[]; const missing=[];
+  key.forEach(w=>{ if(tk(attempt).includes(w)) hit.push(w); else missing.push(w); });
+  return { score: key.size? hit.length/key.size:0, hit:hit.length, total:key.size, missing:missing.slice(0,3) };
+}
+function tutorNext(){ state.tutorStep++; renderTutor(); }
+function tutorDone(){
+  Store.grantXP(40); Store.checkAchievements(); hideTabs();
+  $('view').innerHTML=`<div class="empty" style="padding-top:16vh"><span class="em">👨‍🏫</span><h3 style="margin:0">You're getting it!</h3><p class="muted mt8">${esc(state.tutor.next)}</p>${state.tutor.resources&&state.tutor.resources.length?`<button class="btn btn-secondary mt16" onclick="viewResources({subjectLabel:state.tutor.subject,topic:state.tutor.topic,resources:state.tutor.resources})">Explore resources</button>`:''}<div class="row gap12 mt16" style="max-width:300px;margin:0 auto"><button class="btn btn-primary" style="flex:1" onclick="startQuizFromGen(state.gen)">Quiz me</button><button class="btn btn-secondary" style="flex:1" onclick="viewHome()">Home</button></div></div>`;
+}
+
+function viewResources(gen){
+  hideTabs(); const resources=(gen&&gen.resources)||[];
+  $('view').innerHTML=`<div class="screen-head"><div class="greeting">Learn further · ${esc(gen.subjectLabel||gen.subject||'')}</div><h1>${esc(gen.topic||'Trusted resources')}</h1><p class="muted mt8">Sources selected while researching this lesson.</p></div><div class="mt16" style="display:grid;gap:10px">${resources.length?resources.map(r=>`<a class="source-card" href="${esc(r.url)}" target="_blank" rel="noopener noreferrer"><div class="source-publisher">${esc(r.publisher||'Source')}</div><div style="font-weight:800;margin-top:4px">${esc(r.title)}</div><div class="small muted mt4">${esc(r.why||'Read more about this topic.')}</div></a>`).join(''):'<div class="empty"><span class="em">🔎</span><h3>No web resources available</h3><p class="small muted">Generate the lesson again when research is available.</p></div>'}</div><button class="btn btn-primary mt16" onclick="showFeaturePicker(state.gen)">Back to lesson</button>`;
+}
+
+/* ------------------------- revision notes ------------------------- */
+function viewNotes(note){ hideTabs(); const html=note.html||renderNotes((state.gen&&state.gen.notes)||[]); $('view').innerHTML=`
+  <div class="screen-head"><div class="greeting">Revision notes · ${esc(note.subject||'')}</div><h2>${esc(note.title||note.topic||'')}</h2></div>
+  <div class="section mt16" style="line-height:1.6">${html}</div><button class="btn btn-primary mt16" onclick="viewStudy()">Back to study</button>`; }
+function renderNotes(notes){ if(!notes)return ''; return notes.map(n=>`<div style="margin-bottom:16px"><div style="font-weight:800;font-size:17px;margin-bottom:8px">${esc(n.h)}</div>${(n.pts||[]).map(p=>`<div class="mt8" style="display:flex;gap:8px"><span style="color:var(--brand)">•</span><span>${esc(p)}</span></div>`).join('')}</div>`).join(''); }
+
+/* ------------------------- practice ------------------------- */
+function startPractice(gen){ state.practice=gen.practice||[]; state.practiceIdx=0; state.practiceScore={c:0,t:0}; state.practiceSubject=gen.subjectLabel||'General'; renderPractice(); }
+function renderPractice(){ hideTabs(); const p=state.practice[state.practiceIdx]; if(!p){ practiceDone(); return; }
+  $('view').innerHTML=`
+  <div class="screen-head"><div class="greeting">Practice · ${esc(p.diff)}</div><div class="row between"><h2>Exam-style question</h2><span class="faint small">${state.practiceIdx+1}/${state.practice.length}</span></div></div>
+  <div class="section mt16"><div class="pill ${p.diff==='easy'?'success':p.diff==='medium'?'warn':'brand'}">${p.diff}</div><p class="mt12" style="font-weight:600;line-height:1.5">${esc(p.q)}</p>
+    <div id="pOpts" class="mt12">${(p.o||[]).map((o,i)=>`<button class="q-option" onclick="pickPractice(${i})"><span class="letter">${'ABCD'[i]}</span><span>${esc(o)}</span></button>`).join('')}</div>
+    <button class="btn btn-primary mt16 hidden" id="pNext" onclick="practiceNext()">${state.practiceIdx===state.practice.length-1?'Finish':'Next →'}</button>
+  </div>`; }
+function pickPractice(i){
+  const box=$('pOpts'); if(box.dataset.locked)return; box.dataset.locked='1';
+  const p=state.practice[state.practiceIdx]; const correct=i===p.a;
+  [...box.querySelectorAll('.q-option')].forEach((o,idx)=>{ if(idx===p.a)o.classList.add('correct'); if(idx===i&&!correct)o.classList.add('wrong'); if(idx!==i&&idx!==p.a)o.classList.add('dim'); });
+  state.practiceScore.t++; if(correct)state.practiceScore.c++;
+  Store.recordAnswer(state.practiceSubject, p.diff, correct);
+  const ex=document.createElement('div'); ex.className='explain-box'; ex.innerHTML=`<b style="color:${correct?'var(--success)':'var(--danger)'}">${correct?'✓ Correct':'✗ Not quite'}</b><div class="mt8">${esc(p.exp||'')}</div>`; box.appendChild(ex);
+  $('pNext').classList.remove('hidden');
+}
+function practiceNext(){ state.practiceIdx++; renderPractice(); }
+function practiceDone(){ const s=state.practiceScore; const xp=10+s.c*10; Store.grantXP(xp); Store.recordSession(); Store.addMinutes(8, state.practiceSubject); viewHome(); toast('Practice done · +'+xp+' XP'); }
+
+/* ------------------------- revision planner ------------------------- */
+function viewPlanner(){
+  renderTabs('progress');
+  const plan=Store.db.revisionPlan;
+  $('view').innerHTML=`<div class="screen-head"><div class="greeting">Personal plan</div><h1>Revision Planner</h1></div>
+  ${plan?`
+  <div class="section mt16"><div class="row between"><b>Your weekly plan</b><span class="pill success">Adaptive</span></div><p class="small muted mt8">Weak topics automatically get more time.</p>${plan.focus&&plan.focus.length?`<div class="small muted mt8">Focusing extra on: <b>${plan.focus.map(esc).join(', ')}</b></div>`:''}</div>
+  ${plan.schedule.map(d=>`<div class="day-card mt12"><div class="day-title"><span>${esc(d.day)}</span><span class="small muted">${planMinutes(d)} min</span></div>${d.items.map(it=>`<div class="session-row"><span><b>${esc(it.subject)}</b> — ${esc(it.topic)}</span><span class="faint">${it.min} min</span></div>`).join('')}</div>`).join('')}
+  <button class="btn btn-secondary mt12" onclick="plannerForm()">✏️ Edit plan</button>`
+  :`<div class="empty mt20"><span class="em">🗓️</span><h3 style="margin:0">Plan your revision</h3><p class="small muted mt8">Tell us your subjects and we build a realistic weekly schedule.</p><button class="btn btn-primary mt16" onclick="plannerForm()">Create my plan</button></div>`}`;
+}
+function planMinutes(d){ return d.items.reduce((s,i)=>s+i.min,0); }
+function plannerForm(){
+  renderTabs('progress');
+  $('view').innerHTML=`
+  <div class="screen-head"><div class="greeting">Plan</div><h2>Build your schedule</h2></div>
+  <div class="section mt16">
+    <div class="field"><label>Exam date (optional)</label><input class="input" type="date" id="pDate"></div>
+    <div class="field"><label>Topics to revise</label><textarea class="input" id="pTopics" placeholder="Algebra, Cells, Macbeth, WWII…"></textarea></div>
+    <div class="field"><label>Daily time (minutes)</label><input class="input" type="number" id="pMin" value="${Store.db.user.dailyMin||45}" min="5" max="240"></div>
+    <button class="btn btn-primary" onclick="savePlanner()">Build schedule ✨</button></div>`;
+}
+function savePlanner(){ const date=$('pDate').value; const topics=$('pTopics').value.split(',').map(s=>s.trim()).filter(Boolean); const min=parseInt($('pMin').value)||45; if(!topics.length){ toast('Add at least one topic.'); return; } buildPlan(topics,min,date); }
+function buildPlan(topics,min,exam){
+  const days=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  // Adaptive: weight each topic by performance (weak topics get more slots) and exam proximity.
+  const weighted=topics.map(tp=>({ tp, w:topicWeight(tp,exam) }));
+  const occ=[]; weighted.forEach(x=>{ for(let i=0;i<Math.min(3,Math.max(1,Math.round(x.w)));i++) occ.push(x.tp); });
+  const schedule=days.map((day,i)=>{
+    const items=[];
+    for(let k=0;k<2;k++){
+      const tp=occ[(i*2+k)%occ.length];
+      if(tp && !items.find(x=>x.topic===tp)) items.push({ subject:matchSubject(tp), topic:tp, min:0 });
+    }
+    const n=items.length||1;
+    items.forEach((it,idx)=>{ it.min = idx===n-1 ? (min-(n-1)*Math.max(15,Math.floor(min/n))) : Math.max(15,Math.floor(min/n)); });
+    return { day, items };
+  });
+  const focus=weighted.filter(x=>x.w>=2).map(x=>x.tp);
+  Store.db.revisionPlan={ exam:exam||null, schedule, focus, created:Date.now() };
+  Store.grantXP(25); Store.save(); viewPlanner(); toast('Plan created! ✨');
+}
+function topicWeight(tp,exam){
+  const d=SSAI.detect(tp); const key=((d.subject||'')+'|'+(d.topic||'')).toLowerCase();
+  const s=Store.db.topicStats[key]; let w=1;
+  if(s){ const tot=s.right+s.wrong; const m=tot? s.right/tot:1; if(m<0.5) w=2.5; else if(m<0.75) w=1.6; }
+  if(exam){ const days=(new Date(exam)-Date.now())/864e5; if(days>0&&days<14) w*=1.4; }
+  return w;
+}
+function matchSubject(topic){ const d=SSAI.detect(topic); return d.subject!=='general'? (SSAI.SUBJECT_LABEL[d.subject]||'General') : (Store.db.user.subjects[0]||'General'); }
+
+/* ------------------------- progress ------------------------- */
+function viewProgress(){
+  renderTabs('progress'); const lv=Store.computeLevel(Store.db.xp);
+  const avg=avgScore(); const weak=weakAreas(); const strong=strongAreas(); const week=lastWeek();
+  $('view').innerHTML=`
+  <div class="screen-head"><div class="greeting">Your progress</div><h2>Progress</h2></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px">
+    ${statCard('🎯','Avg score',avg+'%')}${statCard('🔥','Streak',Store.db.streak.count+' days')}${statCard('🧠','Cards reviewed',Store.db.docStats.flashcardsReviewed||0)}${statCard('⏱️','Time studied',minText(Store.db.totalMinutes))}
+  </div>
+  <div class="section mt16"><div class="row between"><b>Last 7 days</b></div><div class="row" style="gap:8px;align-items:flex-end;height:110px;margin-top:12px">${week.map(w=>`<div style="flex:1;text-align:center"><div style="height:${w.h}px;background:var(--grad);border-radius:6px 6px 0 0;margin:0 auto;max-width:22px"></div><div class="tiny faint" style="margin-top:6px">${w.d}</div></div>`).join('')}</div></div>
+  <div class="section mt12"><div style="font-weight:700">Strongest topics</div>${strong.length?strong.map(s=>`<div class="stat-row"><span>${esc(s)}</span><span class="pill success">💪 strong</span></div>`).join(''):'<div class="small muted mt8">Take a quiz to reveal your strong topics.</div>'}</div>
+  <div class="section mt12"><div style="font-weight:700">Weakest topics</div>${weak.length?weak.map(s=>`<div class="stat-row"><span>${esc(s)}</span><button class="btn btn-sm btn-primary" onclick="reviseTopic('${esc(s)}')">Revise</button></div>`).join(''):'<div class="small muted mt8">No weak spots detected — keep it up!</div>'}</div>`;
+}
+function statCard(ic,label,val){ return `<div class="section" style="padding:16px"><div style="font-size:22px">${ic}</div><div style="font-weight:900;font-size:22px;margin-top:6px">${esc(val)}</div><div class="small muted">${label}</div></div>`; }
+function avgScore(){ const q=Store.db.quizzes; if(!q.length)return 0; return Math.round(q.reduce((s,x)=>s+x.score/x.total,0)/q.length*100); }
+function aggTopics(){ const a={}; Object.values(Store.db.topicStats).forEach(s=>{ const k=s.subject+'|'+s.topic; a[k]=a[k]||{right:0,wrong:0}; a[k].right+=s.right; a[k].wrong+=s.wrong; }); return a; }
+function strongAreas(){ return Object.entries(aggTopics()).filter(([k,v])=>v.right>v.wrong&&v.right>=2).slice(0,3).map(([k])=>k.split('|')[1]||k.split('|')[0]); }
+function weakAreas(){ return Object.entries(aggTopics()).filter(([k,v])=>v.wrong>=v.right).slice(0,3).map(([k])=>k.split('|')[1]||k.split('|')[0]); }
+function lastWeek(){ const out=[]; for(let i=6;i>=0;i--){ const d=new Date(Date.now()-i*864e5); const k=d.toISOString().slice(0,10); const mins=Store.db.daily[k]?Store.db.daily[k].minutes:0; out.push({d:d.toLocaleDateString('en',{weekday:'short'}), h:Math.min(100,mins/2)}); } return out; }
+function reviseTopic(topic){ const subj=Store.db.user.subjects[0]||'General'; const gen=SSAI.generate({subject:subj,topic}); state.gen=gen; startCardReview(gen.cards,gen); }
+
+/* ------------------------- study library ------------------------- */
+function viewStudy(){
+  renderTabs('study');
+  const cards=Store.db.flashcards; const groups=groupByTopic(cards);
+  $('view').innerHTML=`
+  <div class="screen-head"><div class="greeting">Study</div><h2>Your library</h2></div>
+  ${cards.length?`<div class="section mt16"><b>Material</b><div class="small muted mt8">${cards.length} flashcards · ${Store.db.notes.length} sets of notes</div></div>
+  <div class="mt16"><b>Recent sets</b>${groups.map(g=>`<div class="list-item" onclick="openRecent('${esc(g.topic)}','${esc(g.subject)}')"><div class="row between"><div><div style="font-weight:700">${esc(g.topic)}</div><div class="small muted">${esc(g.subject)} · ${g.cards.length} cards</div></div><span style="color:var(--brand)">→</span></div></div>`).join('')}</div>
+  <button class="btn btn-secondary mt16" onclick="startQuickReview()">Review all flashcards</button>`
+  :`<div class="empty mt20"><span class="em">📚</span>No material yet.<br><button class="btn btn-primary mt16" onclick="viewCreatePicker()">Scan your first material</button></div>`}`;
+}
+function groupByTopic(cards){ const m={}; cards.forEach(c=>{ const k=c.subject+'|'+c.topic; (m[k]=m[k]||{subject:c.subject,topic:c.topic,cards:[]}).cards.push(c); }); return Object.values(m); }
+function openRecent(topic,subject){ const gen=SSAI.generate({subject,topic}); state.gen=gen; startCardReview(gen.cards,gen); }
+
+/* ------------------------- full revision pack ------------------------- */
+function viewPack(gen){ hideTabs(); $('view').innerHTML=`
+  <div class="screen-head"><div class="greeting">Full revision pack</div><h2>${esc(gen.topic)}</h2></div>
+  <div class="section mt16"><b>📖 Revision notes</b>${renderNotes(gen.notes)}</div>
+  <div class="section mt12"><b>🧠 Flashcards (${gen.cards.length})</b><div class="mt8">${gen.cards.slice(0,4).map(c=>`<div class="list-item"><b>${esc(c.f)}</b><div class="small muted mt4">${esc(c.b)}</div></div>`).join('')}${gen.cards.length>4?'<div class="small muted mt8">+'+ (gen.cards.length-4) +' more…</div>':''}</div></div>
+  <div class="row gap12 mt16"><button class="btn btn-primary" style="flex:1" onclick="startQuizFromGen(state.gen)">Take quiz</button><button class="btn btn-secondary" onclick="viewHome()">Home</button></div>`;
+}
+
+/* ------------------------- pricing ------------------------- */
+let billing='year';
+function viewPricing(){
+  hideTabs();
+  $('view').innerHTML=`
+  <div class="screen-head" style="text-align:center"><div class="greeting">Upgrade</div><h1>Study smarter.<br><span style="background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent">Not harder.</span></h1></div>
+  <div class="row gap8 mt16" style="justify-content:center"><button class="chip ${billing==='month'?'on':''}" onclick="setBilling('month')">Monthly</button><button class="chip ${billing==='year'?'on':''}" onclick="setBilling('year')">Yearly · save 33%</button></div>
+  <div class="section mt16" style="background:var(--grad);color:#fff;border:none">
+    <div class="row between"><b>Skribl Pro</b><span class="pill" style="background:rgba(255,255,255,.25)">Best value</span></div>
+    <div style="font-size:40px;font-weight:900;margin-top:12px">${billing==='year'?'£39.99':'£4.99'}<span class="small" style="font-weight:500;opacity:.85">/${billing==='year'?'year':'month'}</span></div>
+    <div class="mt16" style="display:grid;gap:8px">${['Unlimited AI generations','Unlimited flashcards & quizzes','Full AI Tutor (Teach Me)','Personalised revision plans','Advanced progress analytics','Unlimited practice questions','Exam preparation mode'].map(f=>`<div class="row gap8"><span>✓</span><span>${f}</span></div>`).join('')}</div>
+    <button class="btn mt20" style="background:#fff;color:var(--brand)" onclick="upgrade()">Start Pro</button>
+    <p class="tiny" style="text-align:center;margin-top:12px;opacity:.75">Demo build — no real billing yet. Production hooks Stripe / App Store / Play Billing.</p>
+  </div>
+  <button class="btn btn-ghost mt16" onclick="AppTab('home')">Continue with Free</button>`;
+}
+function setBilling(b){ billing=b; viewPricing(); }
+function upgrade(){ Store.db.user.plan='pro'; Store.save(); Store.grantXP(100); Store.checkAchievements(); toast('Welcome to Pro! 🎉'); AppTab('profile'); }
+function showUpgrade(){ modal(`<h3 style="text-align:center">You've reached today's free limit</h3><p class="muted" style="text-align:center;margin-top:8px">Upgrade to Pro for unlimited generations and full study tools.</p><button class="btn btn-primary mt16" onclick="closeModal();viewPricing()">See Pro →</button><button class="btn btn-ghost mt8" onclick="closeModal()">Continue with Free</button>`); }
+
+/* ------------------------- profile ------------------------- */
+function viewProfile(){
+  renderTabs('profile');
+  const u=Store.db.user; const lv=Store.computeLevel(Store.db.xp);
+  $('view').innerHTML=`
+  <div class="screen-head"><div class="greeting">Profile</div><h2>${esc(u.name)}</h2></div>
+  <div class="section mt16" style="background:var(--grad);color:#fff;border:none"><div class="row between"><b>Level ${lv.level}</b><b>${lv.into} / ${lv.need} XP</b></div><div class="prog mt8" style="background:rgba(255,255,255,.25)"><i style="width:${Math.round(lv.into/lv.need*100)}%"></i></div></div>
+  <div class="section mt12"><div class="row between"><span>Total XP</span><b>${Store.db.xp}</b></div><div class="row between mt8"><span>Study sessions</span><b>${Store.db.totalSessions}</b></div><div class="row between mt8"><span>Best streak</span><b>${Store.db.bestStreak} days</b></div><div class="row between mt8"><span>Grade</span><b>${esc(u.grade||'—')}</b></div><div class="row between mt8"><span>Plan</span><span class="pill ${Store.isPro()?'brand':'soft'}">${Store.isPro()?'PRO':'Free'}</span></div></div>
+  <div class="section mt12"><b>Achievements</b><div class="mt12">${Store.ACHIEVEMENTS.map(showAch).join('')}</div></div>
+  <div class="section mt12"><b>Subscription</b><p class="small muted mt8">${Store.isPro()?'You\'re on Pro — thank you!':'Upgrade for unlimited study.'}</p><button class="btn ${Store.isPro()?'btn-secondary':'btn-primary'} mt8" onclick="${Store.isPro()?'AppTab(\'home\')':'viewPricing()'}">${Store.isPro()?'Manage plan':'Upgrade to Pro'}</button></div>
+  <button class="btn btn-secondary mt20" onclick="signOut()">Log out</button>`;
+}
+function showAch(a){ const un=Store.db.achievements.includes(a.id); const p=Store.achProgress(a.id)||{cur:0,max:1}; return `<div class="achv ${un?'':'locked'}"><div class="em">${a.em}</div><div style="flex:1"><div style="font-weight:700">${esc(a.name)}</div><div class="small muted">${esc(a.desc)}</div><div class="bar"><i style="width:${un?100:Math.min(100,(p.cur||0)/(p.max||1)*100)}%"></i></div></div>${un?'<span style="color:var(--success)">✓</span>':''}</div>`; }
+function signOut(){ Store.db.user=null; Store.save(); login(); }
+
+/* ------------------------- init ------------------------- */
+function init(){
+  // First-time visitors land on the welcome screen so they can create a real
+  // account (→ onboarding) — no more silently creating a Guest.
+  if(!Store.db.user){ viewLanding(); return; }
+  AppTab('home');
+}
+function viewLanding(){
+  hideTabs();
+  $('view').innerHTML=`
+  <div class="auth-card">
+    <div class="logo">✍️</div>
+    <h1 style="margin-top:14px">Skribl</h1>
+    <p class="muted" style="margin:8px 0 0">Take a photo of what you're learning.<br>Get personalised revision in seconds.</p>
+    <button class="btn btn-primary mt24" onclick="viewAuth('signup')">Create my account</button>
+    <button class="btn btn-secondary mt8" onclick="createGuest()">Explore as a guest</button>
+  </div>`;
+}
+function createGuest(){
+  Store.db.user={ id:uid(), name:'Guest', email:'guest@skribl.app', auth:'guest', plan:'free', dailyMin:45, createdAt:Date.now() };
+  Store.db.daily[Store.todayStr()]={goal:45,minutes:0}; Store.save();
+  AppTab('home'); toast('Exploring as guest');
+}
+window.addEventListener('load', init);</script>
+</body>
+</html>
